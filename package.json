@@ -1,0 +1,9 @@
+{
+    "name"          : "flipcards-3",
+    "version"       : "0.0.0",
+    "description"   : "Spaced repetion app for learning ASL",
+    "main"          : "server.js",
+    "dependencies"  : {
+        "express"       : "^4.13.4"
+    }
+}
