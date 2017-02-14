@@ -1,0 +1,13 @@
+#rectangle{
+	position: absolute;
+	box-shadow: 0 9px 20px -5px;
+	background:#FFFAF0; 
+}
+
+#flipImage{
+	position: absolute;
+}
+
+#flashcardText{
+	position: absolute;
+}
