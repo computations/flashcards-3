@@ -17,8 +17,8 @@ flashcard.controller('flashcardController',
 		$scope.flipWidth = numToCSS(100); 
 
 		//Text/info on card coordinates
-		$scope.textXpos = numToCSS($scope.xpos + 50); 
-		$scope.textYpos = numToCSS($scope.ypos + 50); 
+		$scope.textXpos = numToCSS($scope.xpos + 25); 
+		$scope.textYpos = numToCSS($scope.ypos + 25); 
 
 		//Make number values to text for CSS (flashcard)
 		$scope.rectHeight = numToCSS($scope.rectHeight); 
@@ -53,8 +53,21 @@ flashcard.controller('flashcardController',
 		}
 
 		$scope.textStyle = function(){
+			//Wrap the text with newlines before sending
+			var textArray = textWrap($scope.flashcardInfo[$scope.flashcardTextCounter], 
+				$scope.rectWidth); 
+
+			var str = ""; 
+			for(i=0; i<textArray.length; i++){
+				str += textArray[i]; 
+				str += " "; 
+				if(i==10){      /////////////////////////NEED A BETTER TEXT-WRAP FUNCTION/////////
+					//make a newline
+					str +="<br>";
+				}
+			} 
 			document.getElementById("flashcardText").innerHTML =
-			$scope.flashcardInfo[$scope.flashcardTextCounter];
+			str;
 
 			return {
 					left: $scope.textXpos,
@@ -83,7 +96,7 @@ flashcard.controller('flashcardController',
 
 			$scope.flashcardTextCounter=saveCounter; 
 			$scope.flashcardInfo[$scope.flashcardTextCounter];
-			console.log("clicked flip"); 
+
 		}
 
 }); 
@@ -91,4 +104,10 @@ flashcard.controller('flashcardController',
 //Convert number into CSS compatible string
 function numToCSS(num){
 	return num.toString() + 'px'; 
+}
+
+//Text wrap based on maxwidth
+function textWrap(t, w){
+	var newText = t.split(" "); 
+	return newText; 
 }
