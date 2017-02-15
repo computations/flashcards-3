@@ -1,4 +1,4 @@
-var flashcard = angular.module('flashcards',[]);
+var flashcard = angular.module('flashcards',['ngAnimate']);
 
 flashcard.controller('flashcardController', 
 	function ($scope){
@@ -8,6 +8,8 @@ flashcard.controller('flashcardController',
 		$scope.rectWidth = 400; 
 		$scope.xpos = 150; 
 		$scope.ypos = 100; 
+		$scope.deg = 0; 
+		$scope.degString = "rotateX(" + $scope.deg + "deg" + ")"; 
 
 		//Calculate flip image's coordinates
 		$scope.flipXpos = numToCSS($scope.xpos + 
@@ -15,6 +17,7 @@ flashcard.controller('flashcardController',
 		$scope.flipYpos = numToCSS($scope.ypos - 100); 
 		$scope.flipHeight = numToCSS(100); 
 		$scope.flipWidth = numToCSS(100); 
+		$scope.flip = false; 
 
 		//Text/info on card coordinates
 		$scope.textXpos = numToCSS($scope.xpos + 25); 
@@ -28,17 +31,24 @@ flashcard.controller('flashcardController',
 
 		$scope.flashcardInfo = [" ","Milk", ": an opaque white " +
 		"fluid rich in fat and protein, secreted by " +
-		"female mammals for the nourishment of their young."]
+		"female mammals for the nourishment of their young.", 
+		"verb: draw milk from (a cow or another animal), either " +
+		"by hand or mechanically.", "verb2: exploit or defraud " +
+		"(someone), typically by taking regular small amounts of "+
+		"money over a period of time."]
 
 		$scope.flashcardTextCounter = 1; 
 
 		//CSS values for flashcard
 		$scope.rectStyle = function(){
+			if($scope.flip){
+				$("#rectangle").addClass("@keyframes flip"); 
+			}
 			return {
          			left: $scope.xpos, 
           			top: $scope.ypos, 
           			height: $scope.rectHeight, 
-          			width: $scope.rectWidth
+          			width: $scope.rectWidth,
 			}
 		}
 
@@ -97,9 +107,26 @@ flashcard.controller('flashcardController',
 			$scope.flashcardTextCounter=saveCounter; 
 			$scope.flashcardInfo[$scope.flashcardTextCounter];
 
+			//set flip to true
+			$scope.flip = true; 
+			$scope.rectStyle(); //call for card changes
 		}
 
 }); 
+
+flashcard.directive('animateFlip', ['$animateCss', 
+	function($animateCss) {
+		return {
+			link: function(scope, elem, attrs){
+				elem.on('click', function(){
+					var self = angular.element(this);
+					$animate.addClass(self, 'flip', function(){
+						self.removeClass('flip'); 
+					})
+				})
+			}
+		}
+	}]); 
 
 //Convert number into CSS compatible string
 function numToCSS(num){

@@ -2,11 +2,11 @@
   <head>
     <link rel="stylesheet" href="flashcard.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.6/angular.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/X.Y.Z/angular-animate.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.js"></script> 
     <script src="app.js"></script>
   </head>
   <body ng-app="flashcards" ng-controller="flashcardController">
-    <div id="rectangle" ng-style="rectStyle()"></div>
+    <div id="rectangle" ng-style="rectStyle()" class="flip-animation"></div>
     <div id="flashcardText" ng-style="textStyle()"></div>
     <img id="flipImage" src="flip_image.png" alt="Press to flip." ng-style="flipImageStyle()" ng-click="flipClick()">
   </body>
