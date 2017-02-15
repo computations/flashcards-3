@@ -6,8 +6,10 @@
     <script src="app.js"></script>
   </head>
   <body ng-app="flashcards" ng-controller="flashcardController">
-    <div id="rectangle" ng-style="rectStyle()" class="flip-animation"></div>
-    <div id="flashcardText" ng-style="textStyle()"></div>
+    <div id="rectangle" ng-style="rectStyle()" class="flip-animation">
+      <div id="flashcardText" ng-style="textStyle()"></div>
+    </div>
+
     <img id="flipImage" src="flip_image.png" alt="Press to flip." ng-style="flipImageStyle()" ng-click="flipClick()">
   </body>
 </html>

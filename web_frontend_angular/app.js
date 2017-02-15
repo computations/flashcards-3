@@ -63,26 +63,7 @@ flashcard.controller('flashcardController',
 		}
 
 		$scope.textStyle = function(){
-			//Wrap the text with newlines before sending
-			var textArray = textWrap($scope.flashcardInfo[$scope.flashcardTextCounter], 
-				$scope.rectWidth); 
-
-			var str = ""; 
-			for(i=0; i<textArray.length; i++){
-				str += textArray[i]; 
-				str += " "; 
-				if(i==10){      /////////////////////////NEED A BETTER TEXT-WRAP FUNCTION/////////
-					//make a newline
-					str +="<br>";
-				}
-			} 
-			document.getElementById("flashcardText").innerHTML =
-			str;
-
-			return {
-					left: $scope.textXpos,
-					top: $scope.textYpos
-			}
+			document.getElementById("flashcardText").innerHTML = $scope.flashcardInfo[$scope.flashcardTextCounter]
 		}
 
 		//if flip image is clicked 
@@ -133,8 +114,8 @@ function numToCSS(num){
 	return num.toString() + 'px'; 
 }
 
-//Text wrap based on maxwidth
-function textWrap(t, w){
-	var newText = t.split(" "); 
-	return newText; 
-}
+// //Text wrap based on maxwidth
+// function textWrap(t, w){
+// 	var newText = t.split(" ");
+// 	return newText;
+// }

@@ -14,6 +14,8 @@
 
 #flashcardText{
 	position: absolute;
+	word-wrap: break-word;
+	padding: 10px;
 }
 
 .flip-animation {
