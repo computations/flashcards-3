@@ -113,9 +113,3 @@ flashcard.directive('animateFlip', ['$animateCss',
 function numToCSS(num){
 	return num.toString() + 'px'; 
 }
-
-// //Text wrap based on maxwidth
-// function textWrap(t, w){
-// 	var newText = t.split(" ");
-// 	return newText;
-// }
