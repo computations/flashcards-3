@@ -6,6 +6,11 @@ app.get('/index', function(req, res){
     res.send('Hello World!');
 })
 
+app.get('/cards/:id?', function(req, res){
+    console.log("connection from " + req.ip);
+    res.send(req.params.id)
+})
+
 app.listen(3000, function(){
-    console.log("Example app listen on port 3000!");
+    console.log("Flashcards app listen on port 3000!");
 })

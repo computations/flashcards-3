@@ -1,9 +1,26 @@
 {
-    "name"          : "flipcards-3",
-    "version"       : "0.0.0",
-    "description"   : "Spaced repetion app for learning ASL",
-    "main"          : "server.js",
-    "dependencies"  : {
-        "express"       : "^4.13.4"
-    }
+  "name": "flipcards-3",
+  "version": "0.0.0",
+  "description": "Spaced repetion app for learning ASL",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.13.4"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "python3 tests/tests.py"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/computations/flashcards-3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/computations/flashcards-3/issues"
+  },
+  "homepage": "https://github.com/computations/flashcards-3#readme"
 }
