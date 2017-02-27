@@ -11,6 +11,11 @@
     <div class="flip-container">
       <div class="flipper" ng-click="flipCard()" ng-class="{'flipToFront':isCardRevealed, 'flipToBack':!isCardRevealed}">
         <div class="back" ng-class="{'face-hidden':hideBackFace}">
+            <h1>{{currentCard.title | uppercase}}</h1>
+            <p ng-if="currentCard.icon">{{currentCard.icon}}</p>
+            <br ng-if="currentCard.icon" />
+            <img ng-if="currentCard.imageUrl" src="{{currentCard.imageUrl}}" alt="currentCard.imageAlt" />
+            <p>{{currentCard.description}}</p>
         </div>
         <div class="front" ng-class="{'face-hidden':!hideBackFace}">
           <h1>{{currentCard.title | uppercase}}</h1>
