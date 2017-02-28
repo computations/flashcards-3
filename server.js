@@ -6,6 +6,11 @@ app.get('/index', function(req, res){
     res.send('Hello World!');
 })
 
+app.get('/', function(req, res){
+    console.log("connection from " + req.ip);
+    res.sendFile('public/html/index.html', {"root":__dirname})
+})
+
 app.get('/cards/:id?', function(req, res){
     console.log("connection from " + req.ip);
     res.send(req.params.id)
