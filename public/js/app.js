@@ -33,28 +33,28 @@ flashcard.controller('flashcardController', function ($scope) {
             description:"A greeting to an aquaintance typically stated in the morning"
         }
     ];
-    $scope.currentCard = {};
-    $scope.cardCounter = -1;
-    $scope.isCardRevealed = false;
+    $scope.currentCard = $scope.cards[0];
+    $scope.cardCounter = 0;
+    $scope.isCardRevealed = true;
 
     //will be used to trigger whether or not card back will be displayed
     $scope.clickBack = true;
 
     $scope.flipCard = function() {
         $scope.isCardRevealed = !$scope.isCardRevealed;
-        if($scope.isCardRevealed) {
-            $scope.generateCard();
-
-        } else {
-            $scope.currentCard = {};
-
-        }
+        $scope.generateCard();
+        // if($scope.isCardRevealed) {
+        //    $scope.generateCard();
+        //
+        // } else {
+        //     $scope.generateCard();
+        // }
         /*
 
 
 
          */
-    }
+    };
 
     $scope.generateCard = function() {
         var saveCounter = $scope.cardCounter;

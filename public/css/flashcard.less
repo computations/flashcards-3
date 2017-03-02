@@ -50,7 +50,7 @@
   transform: rotateY(0deg);
 }
 
-.flipper-transform(@transition: 0.4s) {
+.flipper-transform(@transition: 1s) {
   -webkit-transform-style: preserve-3d;
   -moz-transform-style: preserve-3d;
   -o-transform-style: preserve-3d;
@@ -134,12 +134,6 @@ footer {
   }
 }
 
-.face-hidden {
-
-  /*
-      .face-should-be-hidden();
-  */
-}
 
 .front, .back {
   /* ensure that everything fits */
@@ -147,7 +141,7 @@ footer {
 
   /* hide back of pane during swap */
   overflow:hidden;
-
+  backface-visibility: hidden;
   display:inline-block;
 
   /* Card overlay eachother */
@@ -181,16 +175,18 @@ footer {
 
 /* back, initially hidden pane */
 .back {
-  background-color:#EBEBEB;
+
+  text-align:center;
+  z-index: 2;
+  background-color:#FEFEFE;
   .flipped-transform-back ();
-
-  background-image: url('http://subtlepatterns.com/patterns/upfeathers.png');
-  background-position: center;
-  background-repeat: repeat;
   .box-sizing();
-  border:1em solid #FEFEFE;
-
-
+  border:0.5em solid #FEFEFE;
+  img {
+    width:75%;
+    height:auto;
+    .border-radius();
+  }
 }
 
 /* Media Queries */
