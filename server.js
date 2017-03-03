@@ -7,6 +7,7 @@ global.db = mongoose.createConnection(uri);
 var app = express();
 var routes = require('./routes');
 
+app.use(express.static('public'));
 app.get('/', routes.index);
 app.get('/card/:id', routes.get_cards);
 app.get('/cards/', routes.get_all_cards);
