@@ -23,7 +23,7 @@ flashcard.controller('flashcardController', function ($scope) {
         {
             title: "",
             icon:"",
-            imageUrl:"http://www.lifeprint.com/asl101/gifs-animated/no-one.gif",
+            imageUrl:"videos/no-one.gif",
             description:""
         },
         {
