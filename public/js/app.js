@@ -57,6 +57,7 @@ flashcard.controller('flashcardController', function ($scope) {
     };
 
     $scope.generateCard = function() {
+        Logger.log("invoked");
         var saveCounter = $scope.cardCounter;
 
         //Show new text
@@ -70,6 +71,7 @@ flashcard.controller('flashcardController', function ($scope) {
         }
 
         $scope.cardCounter = saveCounter;
+        Logger.log($scope.cardCounter);
         $scope.currentCard = $scope.cards[$scope.cardCounter];
     }
 });
