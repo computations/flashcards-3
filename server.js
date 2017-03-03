@@ -15,6 +15,7 @@ app.get('/cards/:id?', function(req, res){
     console.log("connection from " + req.ip);
     res.send(req.params.id)
 })
+app.use(express.static('public'));
 
 app.listen(3000, function(){
     console.log("Flashcards app listen on port 3000!");
