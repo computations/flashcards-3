@@ -12,7 +12,12 @@ exports.index = function(req, res){
     res.sendFile('public/html/index.html', {"root":__dirname})
 };
 
+var CARD_KEYS = ['media']
+
 exports.get_cards = function(req, res){
     console.log("connection from " + req.ip);
-    res.send(req.params.id)
+    model.find({_id: req.params.id}, function(err, cards){
+        if(err) return console.err(err);
+        res.send(cards);
+    });
 };
