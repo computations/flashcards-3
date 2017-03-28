@@ -10,7 +10,22 @@ var Logger = (function () {
     return Logger;
 }());
 
+var mainRoute = angular.module("routecontrol", ["ngRoute"]);
+
+mainRoute.config(function($routeProvider) {
+    $routeProvider
+        .when("/", {
+            templateUrl : "main.html"
+        })
+        .when("/test", {
+            templateUrl : "index.html"
+        });
+});
+
 var flashcard = angular.module('flashcards',['ngAnimate']);
+
+
+
 
 flashcard.controller('flashcardController', function ($scope) {
     $scope.cards = [
