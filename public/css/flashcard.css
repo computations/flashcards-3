@@ -9,11 +9,9 @@
 }
 /* STYLE SHEET */
 body {
-  font-family: "myriad-pro", sans-serif;
-  font-size: 100%;
   text-align: center;
-  color: #D1D1D1;
-  background-color: #333333;
+  color: #ffffff;
+  background-color: #03A9F4;
   margin: 0 auto;
   padding: 0;
 }
@@ -28,8 +26,8 @@ footer a {
 .flip-container {
   display: block;
   margin: 0 auto;
-  width: 40em;
-  height: 24em;
+  width: 45em;
+  height: 27em;
 }
 .flipToFront {
   -webkit-transform: rotateY(0deg);
@@ -178,8 +176,8 @@ footer a {
   .flip-container,
   .front,
   .back {
-    width: 40em;
-    height: 24em;
+    width: 45em;
+    height: 27em;
   }
 }
 /*

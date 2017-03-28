@@ -13,15 +13,34 @@ var Logger = (function () {
 
 
 
-var flashcard = angular.module('flashcards',['ngAnimate'], ['ngRoute']);
+var flashcard = angular.module('flashcards',['ngRoute','ngAnimate']);
 
 flashcard.config(function($routeProvider) {
     $routeProvider
-        .when("/", {
-            templateUrl : "home.html"
+    // route for the home page
+        .when('/', {
+            templateUrl : 'pages/home.html',
+            controller  : 'mainController'
         })
-        .when("/test", {
-            templateUrl : "index.html"
+
+        // route for the cards page
+        .when('/card', {
+            templateUrl : 'pages/card.html',
+            controller  : 'flashcardController'
+        })
+        // route for the abouts page
+        .when('/about', {
+            templateUrl: 'pages/about.html',
+            controller : 'aboutController'
+        })
+        // route for the contact page
+        .when('/contact', {
+            templateUrl : 'pages/contact.html',
+            controller  : 'contactController'
+        })
+        .when('/signin', {
+            templateUrl : 'pages/admin.html',
+            controller  : 'adminController'
         });
 });
 
@@ -70,7 +89,6 @@ flashcard.controller('flashcardController', function ($scope) {
     };
 
     $scope.generateCard = function() {
-        Logger.log("invoked");
         var saveCounter = $scope.cardCounter;
 
         //Show new text
@@ -84,7 +102,23 @@ flashcard.controller('flashcardController', function ($scope) {
         }
 
         $scope.cardCounter = saveCounter;
-        Logger.log($scope.cardCounter);
         $scope.currentCard = $scope.cards[$scope.cardCounter];
     }
+});
+
+flashcard.controller('mainController', function ($scope) {
+    $scope.message = "Testing routes";
+});
+
+flashcard.controller('contactController', function($scope) {
+    $scope.message = 'info needs to be given';
+});
+
+flashcard.controller('aboutController', function($scope) {
+    $scope.message = 'info needs to be given';
+});
+
+flashcard.controller('adminController', function($scope) {
+    $scope.username="";
+    $scope.password="";
 });
