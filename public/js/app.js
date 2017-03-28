@@ -135,3 +135,18 @@ flashcard.controller('adminController', function($scope) {
     $scope.username="";
     $scope.password="";
 });
+
+flashcard.config(function($routeProvider){
+  $routeProvider.when("/about", {
+    templateUrl: "/html/pages/about.html"
+  })
+  .when("/contact", {
+    templateUrl: "/html/pages/contact.html"
+  })
+  .when("/signin", {
+    templateUrl: "/html/pages/admin.html"
+  })
+  .otherwise({
+    template: "<h1>Nope</h1>"
+  });
+});
