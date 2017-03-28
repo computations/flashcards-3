@@ -41,9 +41,10 @@ flashcard.controller('flashcardController', ['$scope', 'Upload', function ($scop
     $scope.clickBack = true;
 
     //Do file upload stuff here
-    $scope.upload = function(file){
+    $scope.uploadFiles = function(file, errFiles){
 
         if(file){
+            /* UNCOMMENT WHEN SERVER SIDE IS DONE
             //upload user file to server using ng-file-upload
             $upload.upload({
                 url: '../../server.js',
@@ -58,17 +59,17 @@ flashcard.controller('flashcardController', ['$scope', 'Upload', function ($scop
                 console.log("Error occurred while sending " +
                  "file to server: " + err)
             }); 
+            */
 
-            //Add new img to preview card
+            //Add new img to preview card//test only
             $scope.cards.push({
                 title: "User File",
                 icon:"",
-                imageUrl:"",
+                imageUrl:"http://www.rd.com/wp-content/uploads/sites/2/2016/04/01-cat-wants-to-tell-you-laptop.jpg",
                 description:""
             }) 
         }
-
-    }; 
+    }
 
     $scope.flipCard = function() {
         $scope.isCardRevealed = !$scope.isCardRevealed;
