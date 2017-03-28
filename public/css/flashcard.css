@@ -141,8 +141,8 @@ footer a {
 }
 /* back, initially hidden pane */
 .back {
+  z-index: -2;
   text-align: center;
-  z-index: 2;
   background-color: #FEFEFE;
   /*transform*/
   -webkit-transform: rotateY(180deg);
