@@ -147,6 +147,6 @@ flashcard.config(function($routeProvider){
     templateUrl: "/html/pages/admin.html"
   })
   .otherwise({
-    template: "<h1>Nope</h1>"
+    templateUrl: "/html/pages/card.html"
   });
 });

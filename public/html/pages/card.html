@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="../../css/flashcard.css">
+<div ng-app="flashcards" ng-controller="flashcardController">
 <div class="flip-container">
     <div class="flipper" ng-click="flipCard()" ng-class="{'flipToFront':isCardRevealed, 'flipToBack':!isCardRevealed}">
         <div class="back" ng-class="{'face-hidden':hideBackFace}">
@@ -17,3 +18,21 @@
         </div>
     </div>
 </div>
+
+
+    <!-- User Upload File -->
+  <p>
+    <h2>New Flashcard Side</h2> 
+    Upload File (Image/Video/Audio)
+    <button ngf-select="uploadFiles($file,$invalidFiles)">Upload File</button>
+  </p>
+
+  <!-- User add new side to card, text only--> 
+  <!-- DEV NOTES, ng-model binds variable, ng-'action' calls angular function --> 
+  <h3>Text</h3>
+  <p>Title of Notecard Side:
+  <input type="text" ng-model="title"></p>
+  <textarea rows="10" cols="75" ng-model="text" ng-init="text='Enter text here'">
+  </textarea> 
+   <button ng-click="usrText(text,title)">Submit</button> 
+
