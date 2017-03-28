@@ -5,7 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "express": "^4.13.4",
-    "mongoose": "^4.8.5"
+    "mongoose": "^4.9.2"
   },
   "scripts": {
     "prestart": "mongod --config /usr/local/etc/mongod.conf &",

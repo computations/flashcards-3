@@ -10,41 +10,9 @@ var Logger = (function () {
     return Logger;
 }());
 
+var flashcard = angular.module('flashcards',['ngAnimate', 'ngFileUpload', 'ngRoute']);
 
-
-
-var flashcard = angular.module('flashcards',['ngRoute','ngAnimate']);
-
-flashcard.config(function($routeProvider) {
-    $routeProvider
-    // route for the home page
-        .when('/', {
-            templateUrl : 'pages/home.html',
-            controller  : 'mainController'
-        })
-
-        // route for the cards page
-        .when('/card', {
-            templateUrl : 'pages/card.html',
-            controller  : 'flashcardController'
-        })
-        // route for the abouts page
-        .when('/about', {
-            templateUrl: 'pages/about.html',
-            controller : 'aboutController'
-        })
-        // route for the contact page
-        .when('/contact', {
-            templateUrl : 'pages/contact.html',
-            controller  : 'contactController'
-        })
-        .when('/signin', {
-            templateUrl : 'pages/admin.html',
-            controller  : 'adminController'
-        });
-});
-
-flashcard.controller('flashcardController', function ($scope) {
+flashcard.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upload) {
     $scope.cards = [
         {
             title: "Good Morning",
@@ -71,6 +39,51 @@ flashcard.controller('flashcardController', function ($scope) {
 
     //will be used to trigger whether or not card back will be displayed
     $scope.clickBack = true;
+    $scope.textVal = "true"
+    if($scope.textVal){
+        console.log($scope.textVal)
+    }
+
+    $scope.usrText = function(text,title){
+        console.log(text)
+        $scope.cards.push({
+            title: title,
+            icon:"",
+            imageUrl:"",
+            description:text
+        }) 
+    }
+
+    //Do file upload stuff here
+    $scope.uploadFiles = function(file, errFiles){
+
+        if(file){
+            /* UNCOMMENT WHEN SERVER SIDE IS DONE
+            //upload user file to server using ng-file-upload
+            $upload.upload({
+                url: '../../server.js',
+                method: 'POST', 
+                file: file
+
+            }).success(function(response,status){
+                //success get img url? 
+                var imgUrl = response
+            }).error(function(err){
+                //error
+                console.log("Error occurred while sending " +
+                 "file to server: " + err)
+            }); 
+            */
+
+            //Add new img to preview card//test only
+            $scope.cards.push({
+                title: "User File",
+                icon:"",
+                imageUrl:"http://www.rd.com/wp-content/uploads/sites/2/2016/04/01-cat-wants-to-tell-you-laptop.jpg",
+                description:""
+            }) 
+        }
+    }
 
     $scope.flipCard = function() {
         $scope.isCardRevealed = !$scope.isCardRevealed;
@@ -104,7 +117,7 @@ flashcard.controller('flashcardController', function ($scope) {
         $scope.cardCounter = saveCounter;
         $scope.currentCard = $scope.cards[$scope.cardCounter];
     }
-});
+}]);
 
 flashcard.controller('mainController', function ($scope) {
     $scope.message = "Testing routes";
