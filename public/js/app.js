@@ -10,7 +10,7 @@ var Logger = (function () {
     return Logger;
 }());
 
-var flashcard = angular.module('flashcards',['ngAnimate', 'ngFileUpload']);
+var flashcard = angular.module('flashcards',['ngAnimate', 'ngFileUpload', 'ngRoute']);
 
 flashcard.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upload) {
     $scope.cards = [
@@ -119,3 +119,19 @@ flashcard.controller('flashcardController', ['$scope', 'Upload', function ($scop
     }
 }]);
 
+flashcard.controller('mainController', function ($scope) {
+    $scope.message = "Testing routes";
+});
+
+flashcard.controller('contactController', function($scope) {
+    $scope.message = 'info needs to be given';
+});
+
+flashcard.controller('aboutController', function($scope) {
+    $scope.message = 'info needs to be given';
+});
+
+flashcard.controller('adminController', function($scope) {
+    $scope.username="";
+    $scope.password="";
+});
