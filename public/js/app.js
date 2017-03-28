@@ -10,9 +10,9 @@ var Logger = (function () {
     return Logger;
 }());
 
-var flashcard = angular.module('flashcards',['ngAnimate']);
+var flashcard = angular.module('flashcards',['ngAnimate', 'ngFileUpload']);
 
-flashcard.controller('flashcardController', function ($scope) {
+flashcard.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upload) {
     $scope.cards = [
         {
             title: "Good Morning",
@@ -39,6 +39,36 @@ flashcard.controller('flashcardController', function ($scope) {
 
     //will be used to trigger whether or not card back will be displayed
     $scope.clickBack = true;
+
+    //Do file upload stuff here
+    $scope.upload = function(file){
+
+        if(file){
+            //upload user file to server using ng-file-upload
+            $upload.upload({
+                url: '../../server.js',
+                method: 'POST', 
+                file: file
+
+            }).success(function(response,status){
+                //success get img url? 
+                var imgUrl = response
+            }).error(function(err){
+                //error
+                console.log("Error occurred while sending " +
+                 "file to server: " + err)
+            }); 
+
+            //Add new img to preview card
+            $scope.cards.push({
+                title: "User File",
+                icon:"",
+                imageUrl:"",
+                description:""
+            }) 
+        }
+
+    }; 
 
     $scope.flipCard = function() {
         $scope.isCardRevealed = !$scope.isCardRevealed;
@@ -72,4 +102,5 @@ flashcard.controller('flashcardController', function ($scope) {
         $scope.cardCounter = saveCounter;
         $scope.currentCard = $scope.cards[$scope.cardCounter];
     }
-});
+}]);
+
