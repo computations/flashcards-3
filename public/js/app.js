@@ -136,6 +136,7 @@ flashcard.controller('adminController', function($scope) {
     $scope.password="";
 });
 
+//Link the html pages
 flashcard.config(function($routeProvider){
   $routeProvider.when("/about", {
     templateUrl: "/html/pages/about.html"
