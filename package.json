@@ -8,6 +8,7 @@
     "mongoose": "^4.9.2"
   },
   "scripts": {
+    "prestart": "mongod --config /usr/local/etc/mongod.conf &",
     "start": "node server.js",
     "test": "python3 tests/tests.py"
   },
