@@ -39,6 +39,20 @@ flashcard.controller('flashcardController', ['$scope', 'Upload', function ($scop
 
     //will be used to trigger whether or not card back will be displayed
     $scope.clickBack = true;
+    $scope.textVal = "true"
+    if($scope.textVal){
+        console.log($scope.textVal)
+    }
+
+    $scope.usrText = function(text,title){
+        console.log(text)
+        $scope.cards.push({
+            title: title,
+            icon:"",
+            imageUrl:"",
+            description:text
+        }) 
+    }
 
     //Do file upload stuff here
     $scope.uploadFiles = function(file, errFiles){
