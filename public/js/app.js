@@ -152,6 +152,7 @@ flashcard.controller('mainController', function ($scope) {
 });
 
 flashcard.controller('contactController', function($scope) {
+    Logger.log("activated controller contact");
     $scope.message = 'info needs to be given';
 });
 
@@ -162,20 +163,4 @@ flashcard.controller('aboutController', function($scope) {
 flashcard.controller('adminController', function($scope) {
     $scope.username="";
     $scope.password="";
-});
-
-//Link the html pages
-flashcard.config(function($routeProvider){
-  $routeProvider.when("/about", {
-    templateUrl: "/html/pages/about.html"
-  })
-  .when("/contact", {
-    templateUrl: "/html/pages/contact.html"
-  })
-  .when("/signin", {
-    templateUrl: "/html/pages/admin.html"
-  })
-  .otherwise({
-    templateUrl: "/html/pages/card.html"
-  });
 });
