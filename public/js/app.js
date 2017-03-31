@@ -16,26 +16,26 @@ flashcard.config(function($routeProvider) {
     $routeProvider
     // route for the home page
         .when('/', {
-            templateUrl : 'pages/home.html',
+            templateUrl : '../html/pages/home.html',
             controller  : 'mainController'
         })
         // route for the cards page
         .when('/card', {
-            templateUrl : 'pages/card.html',
+            templateUrl : '../html/pages/card.html',
             controller  : 'flashcardController'
         })
         // route for the abouts page
         .when('/about', {
-            templateUrl: 'pages/about.html',
+            templateUrl: '../html/pages/about.html',
             controller : 'aboutController'
         })
         // route for the contact page
         .when('/contact', {
-            templateUrl : 'pages/contact.html',
+            templateUrl : '../html/pages/contact.html',
             controller  : 'contactController'
         })
         .when('/signin', {
-            templateUrl : 'pages/admin.html',
+            templateUrl : '../html/pages/admin.html',
             controller  : 'adminController'
         });
 });
