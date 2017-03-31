@@ -4,8 +4,8 @@
   "description": "Spaced repetion app for learning ASL",
   "main": "server.js",
   "dependencies": {
-    "express": "^4.13.4",
-    "mongoose": "^4.9.2", 
+    "express": "^4.15.2",
+    "mongoose": "^4.9.2",
     "np-file-upload": ""
   },
   "scripts": {

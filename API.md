@@ -1,7 +1,7 @@
 #API Documentation
 
 A card is a json object that will contain either content of a card, or
-referencs to content of a card. A request of the form
+references to content of a card. A request of the form
 
     <url>/cards/[number]
 
