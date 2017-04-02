@@ -42,16 +42,51 @@ app.config(function($routeProvider) {
         });
 });
 
-//get card from server
-app.controller('appController', ['$scope','$http', 'Upload', function ($scope, Upload, $http) {
-    $http({
-        method: 'GET',
-        url: 'localhost:3000/cards/'
-    }).then(function successCallback(response){
 
-    }, function errorCallback(response){
+app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $http, Upload) {
+   
+    $scope.getAllCards = function(){
+        //Gets all the cards from the server
+            //Usage: Check API.md for URL needed
+        $http({
+            method: 'GET',
+            url: 'http://localhost:3000/cards/'
+        }).then(function(success){
+            console.log(success)
+            console.log(success.data[0].media[0].url)
 
-    }); 
+        }, function(error){
+            console.log(error)
+        });
+   }
+
+    $scope.getCard = function(cardID){
+            //Gets all the cards from the server
+        //Usage: Check API.md for URL needed
+        card_url = 'http://localhost:3000/card/' + cardID
+        $http({
+            method: 'GET',
+            url: card_url
+        }).then(function(success){
+            console.log(success)
+        }, function(error){
+            console.log(error)
+        });
+   }
+
+    //Give card to server
+    $scope.sendCard = function(){
+        //make a cardID here? 
+        card_url = 'http://localhost:3000/card/' + cardID
+        $http({
+            method: 'POST',
+            url: card_url
+        }).then(function(success){
+            console.log(success)
+        }, function(error){
+            console.log(error)
+        });
+    };
 
 }]);
 
