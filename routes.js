@@ -5,6 +5,7 @@ exports.get_all_cards = function(req, res, next){
         if(err) return next(err);
         res.send(docs);
     });
+    next();
 }
 
 exports.index = function(req, res){
@@ -21,3 +22,7 @@ exports.get_cards = function(req, res){
         res.send(cards);
     });
 };
+
+exports.upload_image = function(req, res, next){
+    console.log(req.file)
+}

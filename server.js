@@ -1,5 +1,6 @@
 var express = require('express');
 var mongoose = require('mongoose');
+var multer = require('multer');
 
 
 var uri  = 'mongodb://localhost/flashcards';
