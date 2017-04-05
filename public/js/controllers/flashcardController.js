@@ -29,11 +29,14 @@ app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upl
     $scope.clickBack = true;
     $scope.textVal = "true"
 
-    $scope.usrText = function(text,title){
+    $scope.newSide = function(text,title,imgUrl){
+        if(text=="Enter text here"){
+            text=""
+        }
         $scope.cards.push({
             title: title,
             icon:"",
-            imageUrl:"",
+            imageUrl:imgUrl,
             description:text
         }) 
     }
