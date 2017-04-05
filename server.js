@@ -27,6 +27,36 @@ app.get('/', routes.index);
 app.get('/card/:id', routes.get_cards);
 app.get('/cards/', routes.get_all_cards);
 
+var storage = multer.diskStorage({
+	destination: function(req, file, cb){
+		cb(null, './public/files/')
+
+	},
+	filename: function(req, file, cb){
+		//CHange filename here 
+		cb(null, file.originalname)		
+	}
+});
+var upload = multer({
+	storage: storage
+}).single('file'); 
+
+app.post('/upload', function(req, res){
+	upload(req, res, function(err){
+		if(err){
+			res.json({
+				error_code: 1, 
+				err_desc:err
+			}); 
+			return; 
+		}
+		res.json({
+			error_code:0,
+			err_desc:null
+		})
+	})
+}); 
+
 app.listen(3000, function(){
     console.log("Flashcards app listen on port 3000!");
 })

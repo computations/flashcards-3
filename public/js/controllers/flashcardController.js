@@ -42,28 +42,30 @@ app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upl
     $scope.uploadFiles = function(file, errFiles){
 
         if(file){
-            /* UNCOMMENT WHEN SERVER SIDE IS DONE
+            /* UNCOMMENT WHEN SERVER SIDE IS DONE */
             //upload user file to server using ng-file-upload
-            $upload.upload({
-                url: '../../server.js',
+            var imgUrl = ""
+            Upload.upload({
+                url: 'http://localhost:3000/upload',
                 method: 'POST', 
                 file: file
 
             }).success(function(response,status){
                 //success get img url? 
-                var imgUrl = response
+                imgUrl = response.url
+                console.log(response.message)
             }).error(function(err){
                 //error
                 console.log("Error occurred while sending " +
                  "file to server: " + err)
             }); 
-            */
+            
 
             //Add new img to preview card//test only
             $scope.cards.push({
                 title: "User File",
                 icon:"",
-                imageUrl:"http://www.rd.com/wp-content/uploads/sites/2/2016/04/01-cat-wants-to-tell-you-laptop.jpg",
+                imageUrl: imgUrl,
                 description:""
             }) 
         }

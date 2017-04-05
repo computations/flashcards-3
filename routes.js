@@ -3,9 +3,9 @@ var model = require('./modelCard');
 exports.get_all_cards = function(req, res, next){
     model.find(function(err, docs){
         if(err) return next(err);
-        res.send(docs);
+        return res.send(docs);
     });
-    next();
+   // next(); Creates error 
 }
 
 exports.index = function(req, res){
@@ -23,6 +23,8 @@ exports.get_cards = function(req, res){
     });
 };
 
-exports.upload_image = function(req, res, next){
-    console.log(req.file)
-}
+
+
+
+
+
