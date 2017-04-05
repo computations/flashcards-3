@@ -9,7 +9,7 @@
     "multer": "^1.2.1"
   },
   "scripts": {
-    "prestart": "mongod --config /usr/local/etc/mongod.conf &",
+    "prestart": "mkdir -p uploads; mongod --config /usr/local/etc/mongod.conf &",
     "start": "node server.js",
     "test": "python3 tests/tests.py"
   },
