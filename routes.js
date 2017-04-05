@@ -22,9 +22,3 @@ exports.get_cards = function(req, res){
         res.send(cards);
     });
 };
-
-
-
-
-
-

@@ -1,6 +1,9 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var multer = require('multer');
+var crypto = require('crypto');
+var fs = require('fs');
+var hash = crypto.createHash('sha256')
 
 
 var uri  = 'mongodb://localhost/flashcards';
@@ -23,38 +26,41 @@ var example_card = new card_model({
 example_card.save();
 
 app.use(express.static('public'));
+app.use('/static',express.static('static'));
 app.get('/', routes.index);
 app.get('/card/:id', routes.get_cards);
 app.get('/cards/', routes.get_all_cards);
 
 var storage = multer.diskStorage({
 	destination: function(req, file, cb){
-		cb(null, './public/files/')
+		cb(null, './uploads')
 
 	},
 	filename: function(req, file, cb){
-		//CHange filename here 
-		cb(null, file.originalname)		
+		cb(null, file.originalname);
 	}
 });
+
+/*
 var upload = multer({
 	storage: storage
 }).single('file'); 
+*/
 
-app.post('/upload', function(req, res){
-	upload(req, res, function(err){
-		if(err){
-			res.json({
-				error_code: 1, 
-				err_desc:err
-			}); 
-			return; 
-		}
-		res.json({
-			error_code:0,
-			err_desc:null
-		})
-	})
+var upload = multer({storage: storage});
+
+app.post('/upload', upload.single('file'), function(req, res){
+    console.log(req.file);
+    var file_type = req.file.mimetype.split('/')[0]
+    var new_dir = 'static/'+file_type+'/';
+    if(!fs.existsSync(new_dir)){
+        fs.mkdirSync(new_dir);
+    }
+    var hashed_file = hash.update(fs.readFileSync(req.file.path)).digest('hex');
+    var filename=new_dir + hashed_file;
+    fs.renameSync(req.file.path, filename);
+    console.log(filename);
+    res.send(filename);
 }); 
 
 app.listen(3000, function(){
