@@ -1,6 +1,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var multer = require('multer');
+var bodyparser = require('body-parser');
 
 var uri  = 'mongodb://localhost/flashcards';
 global.db = mongoose.createConnection(uri);
@@ -31,16 +32,15 @@ var storage = multer.diskStorage({
 });
 var upload = multer({storage: storage});
 
+var jsonparser = bodyParser.json();
+
 app.use(express.static('public'));
 app.use('/static',express.static('static'));
 app.get('/', routes.index);
 app.get('/card/:id', routes.get_cards);
+app.post('/card', jsonparser, routes.create_card);
 app.get('/cards/', routes.get_all_cards);
 app.post('/upload', upload.single('file'), routes.upload_file);
-
-
-
-
 
 app.listen(3000, function(){
     console.log("Flashcards app listen on port 3000!");

@@ -1,4 +1,5 @@
-var model = require('./modelCard');
+var card_model = require('./modelCard');
+var media_model = require('./modelMedia');
 var crypto = require('crypto');
 var fs = require('fs');
 var hash = crypto.createHash('sha256')
@@ -37,4 +38,27 @@ exports.upload_file = function(req,res){
     fs.rename(req.file.path, filename, function(){
         res.send(filename);
     });
+};
+ 
+/*
+ * request object:
+ * {
+ *     media: [
+ *        {
+ *           type: _____,
+ *           url: _____,
+ *        }, ... 
+ *     ]
+ * }
+ */
+exports.create_card = function(req, res){
+    var media_list =[];
+    for(var m of req.body.media){
+        media_list.append( new media_model({
+            type: m.type,
+            url: m.url
+        }));
+    }
+    var new_card = new card_model({media:media_list});
+    new_card.save();
 };
