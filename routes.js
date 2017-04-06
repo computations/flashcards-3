@@ -5,7 +5,7 @@ var fs = require('fs');
 var hash = crypto.createHash('sha256')
 
 exports.get_all_cards = function(req, res, next){
-    model.find(function(err, docs){
+    card_model.find(function(err, docs){
         if(err) return next(err);
         return res.send(docs);
     });

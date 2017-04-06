@@ -32,7 +32,7 @@ var storage = multer.diskStorage({
 });
 var upload = multer({storage: storage});
 
-var jsonparser = bodyParser.json();
+var jsonparser = bodyparser.json();
 
 app.use(express.static('public'));
 app.use('/static',express.static('static'));
