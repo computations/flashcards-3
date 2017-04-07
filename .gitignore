@@ -156,3 +156,4 @@ ENV/
 .ropeproject
 
 static/*
+tests/server_tests/test_content/

@@ -11,16 +11,27 @@ var card_model = require('./modelCard')
 var app = express();
 var routes = require('./routes');
 
-var example_media = new media_model({
-    type: "image",
-    url: "www.newest_example.com"
+/*
+ * While we are testing, clear the database everytime the app starts
+ */
+media_model.remove({}, function(err){
+    console.log("Media collection cleared");
 });
 
-var example_card = new card_model({
-    media : [example_media]
+card_model.remove({}, function(err){
+    console.log("Card collection cleared");
+    var example_media = new media_model({
+        type: "image",
+        url: "www.newest_example.com"
+    });
+
+    var example_card = new card_model({
+        media : [example_media]
+    });
+
+    example_card.save();
 });
 
-example_card.save();
 var storage = multer.diskStorage({
 	destination: function(req, file, cb){
 		cb(null, './uploads')
