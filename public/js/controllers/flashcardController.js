@@ -6,18 +6,21 @@ app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upl
             title: "Good Morning",
             icon: "",
             imageUrl: "",
+            videoUrl: "",
             description: ""
         },
         {
             title: "",
             icon:"",
             imageUrl:"http://www.lifeprint.com/asl101/gifs-animated/no-one.gif",
+            videoUrl: "",
             description:""
         },
         {
             title: "Greeting",
             icon:"",
             imageUrl:"",
+            videoUrl: "",
             description:"A greeting to an aquaintance typically stated in the morning"
         }
     ];
@@ -46,35 +49,48 @@ app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upl
     $scope.uploadFiles = function(file, errFiles){
 
         if(file){
-            /* UNCOMMENT WHEN SERVER SIDE IS DONE */
             //upload user file to server using ng-file-upload
-            var imgUrl = ""
+            var urlPrefix = "http://localhost:3000/"
+
             Upload.upload({
                 url: 'http://localhost:3000/upload',
                 method: 'POST', 
                 file: file
 
             }).success(function(response,status){
-                //success get img url? 
-                imgUrl = response.url
-                console.log(response.message)
+
+                if(response.media_type == "video"){
+                    //Add new img to preview card//test only
+                    $scope.cards.push({
+                        title: "User File",
+                        icon:"",
+                        imageUrl: "",
+                        videoUrl: urlPrefix + response.url,
+                        description:""
+                    }) 
+                }
+                else if(response.media_type == "image"){
+                    //Add new img to preview card//test only
+                    $scope.cards.push({
+                        title: "User File",
+                        icon:"",
+                        imageUrl: urlPrefix + response.url,
+                        videoUrl: "",
+                        description:""
+                    }) 
+                }
+                else{
+                    Logger.log("Media type is not supported.")
+                }
+
+
             }).error(function(err){
                 //error
                 console.log("Error occurred while sending " +
                  "file to server: " + err)
             }); 
-            
-
-            //Add new img to preview card//test only
-            $scope.cards.push({
-                title: "User File",
-                icon:"",
-                imageUrl: imgUrl,
-                description:""
-            }) 
         }
     };
-
 
 
     $scope.addNewCard = function(){

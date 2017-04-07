@@ -8,6 +8,7 @@
             <p ng-if="currentCard.icon && !isCardRevealed">{{currentCard.icon}}</p>
             <br ng-if="currentCard.icon && !isCardRevealed" />
             <img ng-if="currentCard.imageUrl && !isCardRevealed" src="{{currentCard.imageUrl}}" alt="currentCard.imageAlt" />
+            <iframe ng-if"currentCard.videoUrl && isCardRevealed" width="640" height="360" src="currentCard.videoUrl" frameborder="0" allowfullscreen></iframe> 
             <p ng-if="currentCard.description && !isCardRevealed">{{currentCard.description}}</p>
         </div>
         <div class="front" ng-class="{'face-hidden':!hideBackFace}">
@@ -15,6 +16,7 @@
             <p ng-if="currentCard.icon">{{currentCard.icon}}</p>
             <br ng-if="currentCard.icon && isCardRevealed" />
             <img ng-if="currentCard.imageUrl && isCardRevealed" src="{{currentCard.imageUrl}}" alt="currentCard.imageAlt" />
+            <iframe ng-if"currentCard.videoUrl && isCardRevealed" width="640" height="360" src="currentCard.videoUrl" frameborder="0" allowfullscreen></iframe> 
             <p ng-if="currentCard.description && isCardRevealed">{{currentCard.description}}</p>
         </div>
     </div>
@@ -35,7 +37,7 @@
 
 <h4>Upload File (Image/Video/Audio)
 <button ngf-select="uploadFiles($file,$invalidFiles)">Upload File</button></h4> 
-<h4>URL of Media (youtube.com/something)
+<h4>Embed Link (youtube.com/something)
     <input type="text" ng-model="mediaUrl"></h4> 
 <p> 
 <button ng-click="newSide(text,title,mediaUrl)">Submit New Side</button>
