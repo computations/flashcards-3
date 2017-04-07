@@ -31,11 +31,18 @@ class TestGetCalls(unittest.TestCase):
             r = requests.post(TEST_URL+"/upload", files=files)
 
         self.assertEqual(r.status_code, 200)
+        r_json = r.json()
 
-        img_path = r.text.split('/')
+        self.assertTrue('url' in r_json)
+        self.assertTrue('media_type' in r_json)
+
+        img_path = r_json['url'].split('/')
         self.assertEqual(img_path[0], 'static')
         self.assertEqual(img_path[1], 'image')
         self.assertEqual(len(img_path[2]), 64)
+
+        media_type = r_json['media_type']
+        self.assertEqual(media_type, 'image')
 
     def test_CreateCard(self):
         """Check that creating a file works"""
@@ -43,7 +50,7 @@ class TestGetCalls(unittest.TestCase):
         with open(TEST_CONTENT+"/test_1.svg", 'rb') as testimg:
             files = { 'file':('test_1.svg', testimg, 'image/svg+xml')}
             imgpath = requests.post(TEST_URL+"/upload",
-                    files=files).text
+                    files=files).json()['url']
 
         media_list = []
         media_list.append({'type':'image', 'url':imgpath})
