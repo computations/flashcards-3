@@ -1,7 +1,10 @@
 var express = require('express');
+var http = require('http');
+var https = require('https');
 var mongoose = require('mongoose');
 var multer = require('multer');
 var bodyparser = require('body-parser');
+var fs = require('fs');
 
 var uri  = 'mongodb://localhost/flashcards';
 global.db = mongoose.createConnection(uri);
@@ -10,6 +13,7 @@ var media_model = require('./modelMedia')
 var card_model = require('./modelCard')
 var app = express();
 var routes = require('./routes');
+
 
 /*
  * While we are testing, clear the database everytime the app starts
@@ -53,6 +57,10 @@ app.post('/card', jsonparser, routes.create_card);
 app.get('/card/', routes.get_all_cards);
 app.post('/upload', upload.single('file'), routes.upload_file);
 
-app.listen(3000, function(){
-    console.log("Flashcards app listen on port 3000!");
-})
+var private_key = fs.readFileSync('ssl/server.key', 'utf-8');
+var cert = fs.readFileSync('ssl/server.crt', 'utf-8');
+
+var options = {key: private_key, cert: cert}
+
+http.createServer(app).listen(3000);
+https.createServer(options, app).listen(3443)
