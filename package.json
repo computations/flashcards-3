@@ -12,6 +12,7 @@
   "scripts": {
     "prestart": "mkdir -p uploads; mongod --config /usr/local/etc/mongod.conf &",
     "start": "node server.js",
+    "pretest": "python3 tests/pretest.py",
     "test": "python3 tests/tests.py"
   },
   "directories": {

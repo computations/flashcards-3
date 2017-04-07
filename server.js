@@ -50,7 +50,7 @@ app.use('/static',express.static('static'));
 app.get('/', routes.index);
 app.get('/card/:id', routes.get_cards);
 app.post('/card', jsonparser, routes.create_card);
-app.get('/cards/', routes.get_all_cards);
+app.get('/card/', routes.get_all_cards);
 app.post('/upload', upload.single('file'), routes.upload_file);
 
 app.listen(3000, function(){
