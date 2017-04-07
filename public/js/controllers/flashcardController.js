@@ -27,7 +27,8 @@ app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upl
 
     //will be used to trigger whether or not card back will be displayed
     $scope.clickBack = true;
-    $scope.textVal = "true"
+    $scope.textVal = "true";
+    $scope.deck = [$scope.cards];
 
     $scope.usrText = function(text,title){
         $scope.cards.push({
@@ -36,7 +37,7 @@ app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upl
             imageUrl:"",
             description:text
         }) 
-    }
+    };
 
     //Do file upload stuff here
     $scope.uploadFiles = function(file, errFiles){
@@ -67,7 +68,32 @@ app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upl
                 description:""
             }) 
         }
-    }
+    };
+
+
+
+    $scope.addNewCard = function(){
+        //Inject HTML into DIV object, show all cards on home page
+
+        var div = ""
+        for(var i=0; i<$scope.cards.length; i++){
+            var html = '<div class="col-sm-4 col-lg-4 col-md-4">';
+            html += '<div class="thumbnail">';
+            html += '<img src="http://placehold.it/320x150" alt="">';
+            html += '<div class="caption">';
+            html += '<h4><a href="#!card">' + $scope.cards[i].title + '</a>'; 
+            html += '</h4>'; 
+            html += '<p>Test cards generated</p>'; 
+            html += '</div>'; 
+            html += '</div>'; 
+            html += '</div>'; 
+
+            div += html; 
+        }
+        $scope.deckHTML = div; 
+
+  
+    };
 
     $scope.flipCard = function() {
         $scope.isCardRevealed = !$scope.isCardRevealed;

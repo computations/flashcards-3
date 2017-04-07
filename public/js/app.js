@@ -12,7 +12,7 @@ var Logger = (function () {
 }());
 
 //app controller is the main controller for site (routes)
-var app = angular.module('app',['ngAnimate', 'ngFileUpload', 'ngRoute']);
+var app = angular.module('app',['ngAnimate', 'ngFileUpload', 'ngRoute', 'ngSanitize']);
 
 app.config(function($routeProvider) {
     $routeProvider
@@ -87,6 +87,11 @@ app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $
             console.log(error)
         });
     };
+
+}]);
+
+app.controller('mainController', ['$scope', 'Upload', function ($scope, Upload) {
+
 
 }]);
 
