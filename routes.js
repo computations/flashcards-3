@@ -1,5 +1,5 @@
-var card_model = require('./modelCard');
-var media_model = require('./modelMedia');
+var card_model = require('./models/modelCard');
+var media_model = require('./models/modelMedia');
 var crypto = require('crypto');
 var fs = require('fs');
 

@@ -9,8 +9,8 @@ var fs = require('fs');
 var uri  = 'mongodb://localhost/flashcards';
 global.db = mongoose.createConnection(uri);
 
-var media_model = require('./modelMedia')
-var card_model = require('./modelCard')
+var media_model = require('./models/modelMedia')
+var card_model = require('./models/modelCard')
 var app = express();
 var routes = require('./routes');
 
