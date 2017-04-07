@@ -5,14 +5,16 @@
   "main": "server.js",
   "dependencies": {
     "angular-sanitize": "^1.6.4",
+    "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "mongoose": "^4.9.2",
-    "multer": "^1.3.0",
+    "multer": "^1.2.1",
     "np-file-upload": ""
   },
   "scripts": {
-    "prestart": "mongod --config /usr/local/etc/mongod.conf &",
+    "prestart": "mkdir -p uploads; mongod --config /usr/local/etc/mongod.conf &",
     "start": "node server.js",
+    "pretest": "python3 tests/pretest.py",
     "test": "python3 tests/tests.py"
   },
   "directories": {

@@ -18,3 +18,16 @@ will return a json object.
     }
 
 
+
+##Making a card
+
+Post a json object to `<url>/card` with the following object
+
+```
+{
+    media: [{
+        type: 
+        url: 
+    },...]
+}
+```

@@ -22,17 +22,26 @@
 
 <p>
 <h2>New Flashcard Side</h2>
-Upload File (Image/Video/Audio)
-<button ngf-select="uploadFiles($file,$invalidFiles)">Upload File</button>
-</p>
-
-<!-- User add new side to card, text only-->
+<!-- User add new side to card-->
 <!-- DEV NOTES, ng-model binds variable, ng-'action' calls angular function -->
-<h3>Text</h3>
-<p>Title of Notecard Side:
-    <input type="text" ng-model="title"></p>
+<h3>Title:
+    <input type="text" ng-model="title"></h3>
 <textarea rows="10" cols="75" ng-model="text" ng-init="text='Enter text here'">
   </textarea>
+
 <button ng-click="usrText(text,title)">Submit</button>
-<button ng-click="addNewCard()">Accept Card</button> 
+
+</p>
+
+<h4>Upload File (Image/Video/Audio)
+<button ngf-select="uploadFiles($file,$invalidFiles)">Upload File</button></h4> 
+<h4>URL of Media (youtube.com/something)
+    <input type="text" ng-model="mediaUrl"></h4> 
+<p> 
+<button ng-click="newSide(text,title,mediaUrl)">Submit New Side</button>
+</p> 
+
+
+<button ng-click="newCardInDeck">Accept New Card</button> 
+
 </div>
