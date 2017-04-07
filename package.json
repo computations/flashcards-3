@@ -4,10 +4,12 @@
   "description": "Spaced repetion app for learning ASL",
   "main": "server.js",
   "dependencies": {
-    "express": "^4.13.4",
-    "mongoose": "^4.8.5"
+    "express": "^4.15.2",
+    "mongoose": "^4.9.2",
+    "multer": "^1.2.1"
   },
   "scripts": {
+    "prestart": "mkdir -p uploads; mongod --config /usr/local/etc/mongod.conf &",
     "start": "node server.js",
     "test": "python3 tests/tests.py"
   },

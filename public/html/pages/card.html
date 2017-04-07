@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../css/flashcard.css">
+<div>
+
+<div class="flip-container">
+    <div class="flipper" ng-click="flipCard()" ng-class="{'flipToFront':isCardRevealed, 'flipToBack':!isCardRevealed}">
+        <div class="back" ng-class="{'face-hidden':hideBackFace}">
+            <h1 ng-if="currentCard.title && !isCardRevealed">{{currentCard.title | uppercase}}</h1>
+            <p ng-if="currentCard.icon && !isCardRevealed">{{currentCard.icon}}</p>
+            <br ng-if="currentCard.icon && !isCardRevealed" />
+            <img ng-if="currentCard.imageUrl && !isCardRevealed" src="{{currentCard.imageUrl}}" alt="currentCard.imageAlt" />
+            <p ng-if="currentCard.description && !isCardRevealed">{{currentCard.description}}</p>
+        </div>
+        <div class="front" ng-class="{'face-hidden':!hideBackFace}">
+            <h1 ng-if="currentCard.title && isCardRevealed">{{currentCard.title | uppercase}}</h1>
+            <p ng-if="currentCard.icon">{{currentCard.icon}}</p>
+            <br ng-if="currentCard.icon && isCardRevealed" />
+            <img ng-if="currentCard.imageUrl && isCardRevealed" src="{{currentCard.imageUrl}}" alt="currentCard.imageAlt" />
+            <p ng-if="currentCard.description && isCardRevealed">{{currentCard.description}}</p>
+        </div>
+    </div>
+</div>
+
+<p>
+<h2>New Flashcard Side</h2>
+<!-- User add new side to card-->
+<!-- DEV NOTES, ng-model binds variable, ng-'action' calls angular function -->
+<h3>Title:
+    <input type="text" ng-model="title"></h3>
+<textarea rows="10" cols="75" ng-model="text" ng-init="text='Enter text here'">
+  </textarea>
+</p>
+
+<h4>Upload File (Image/Video/Audio)
+<button ngf-select="uploadFiles($file,$invalidFiles)">Upload File</button></h4> 
+<h4>URL of Media (youtube.com/something)
+    <input type="text" ng-model="mediaUrl"></h4> 
+<p> 
+<button ng-click="newSide(text,title,mediaUrl)">Submit New Side</button>
+</p> 
+
+
+<button ng-click="newCardInDeck">Accept New Card</button> 
+
+</div>

@@ -1,6 +1,6 @@
 /* CARD DIMENSIONS */
-@width: 40em;
-@height: 24em;
+@width: 45em;
+@height: 27em;
 @shadow:1em 1em 2em #111111;
 /* MIXINS */
 .box-shadow (@string:@shadow) {
@@ -75,14 +75,11 @@
 /* STYLE SHEET */
 
 body {
-  font-family: "myriad-pro", sans-serif;
-  font-size:100%;
   text-align:center;
-
-  color:#D1D1D1;
+  color:#ffffff;
 
   padding: 0;
-  background-color:#333333;
+  background-color:#03A9F4;
 
   margin:0 auto;
   padding: 0;
@@ -175,9 +172,8 @@ footer {
 
 /* back, initially hidden pane */
 .back {
-
+  z-index: -2;
   text-align:center;
-  z-index: 2;
   background-color:#FEFEFE;
   .flipped-transform-back ();
   .box-sizing();
