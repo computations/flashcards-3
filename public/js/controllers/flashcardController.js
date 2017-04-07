@@ -58,11 +58,12 @@ app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upl
                 file: file
 
             }).success(function(response,status){
-
+                Logger.log(response.media_type)
                 if(response.media_type == "video"){
+                    Logger.log(urlPrefix + response.url)
                     //Add new img to preview card//test only
                     $scope.cards.push({
-                        title: "User File",
+                        title: "",
                         icon:"",
                         imageUrl: "",
                         videoUrl: urlPrefix + response.url,
@@ -72,7 +73,7 @@ app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upl
                 else if(response.media_type == "image"){
                     //Add new img to preview card//test only
                     $scope.cards.push({
-                        title: "User File",
+                        title: "",
                         icon:"",
                         imageUrl: urlPrefix + response.url,
                         videoUrl: "",

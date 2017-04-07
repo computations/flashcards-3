@@ -8,7 +8,7 @@
             <p ng-if="currentCard.icon && !isCardRevealed">{{currentCard.icon}}</p>
             <br ng-if="currentCard.icon && !isCardRevealed" />
             <img ng-if="currentCard.imageUrl && !isCardRevealed" src="{{currentCard.imageUrl}}" alt="currentCard.imageAlt" />
-            <iframe ng-if"currentCard.videoUrl && isCardRevealed" width="640" height="360" src="currentCard.videoUrl" frameborder="0" allowfullscreen></iframe> 
+            <video controls loop autoplay="autoplay" ng-if="currentCard.videoUrl && !isCardRevealed" width="640" height="360" src="{{currentCard.videoUrl}}" frameborder="0" allowfullscreen></video> 
             <p ng-if="currentCard.description && !isCardRevealed">{{currentCard.description}}</p>
         </div>
         <div class="front" ng-class="{'face-hidden':!hideBackFace}">
@@ -16,7 +16,7 @@
             <p ng-if="currentCard.icon">{{currentCard.icon}}</p>
             <br ng-if="currentCard.icon && isCardRevealed" />
             <img ng-if="currentCard.imageUrl && isCardRevealed" src="{{currentCard.imageUrl}}" alt="currentCard.imageAlt" />
-            <iframe ng-if"currentCard.videoUrl && isCardRevealed" width="640" height="360" src="currentCard.videoUrl" frameborder="0" allowfullscreen></iframe> 
+            <video controls loop autoplay="autoplay" ng-if="currentCard.videoUrl && isCardRevealed" width="640" height="360" src="{{currentCard.videoUrl}}" frameborder="0" allowfullscreen></video> 
             <p ng-if="currentCard.description && isCardRevealed">{{currentCard.description}}</p>
         </div>
     </div>
