@@ -50,7 +50,7 @@ class TestGetCalls(unittest.TestCase):
         with open(TEST_CONTENT+"/test_1.svg", 'rb') as testimg:
             files = { 'file':('test_1.svg', testimg, 'image/svg+xml')}
             imgpath = requests.post(TEST_URL+"/upload",
-                    files=files).text
+                    files=files).json()['url']
 
         media_list = []
         media_list.append({'type':'image', 'url':imgpath})
