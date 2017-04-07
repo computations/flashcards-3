@@ -11,6 +11,7 @@ global.db = mongoose.createConnection(uri);
 
 var media_model = require('./models/modelMedia')
 var card_model = require('./models/modelCard')
+var deck_model = require('./models/modelDeck')
 var app = express();
 var routes = require('./routes');
 
@@ -29,8 +30,14 @@ card_model.remove({}, function(err){
         url: "www.newest_example.com"
     });
 
+    var example_deck = new deck_model({
+        title: "Test Deck",
+        desc: "The example deck"
+    });
+
     var example_card = new card_model({
-        media : [example_media]
+        media : [example_media],
+        decks : [example_deck]
     });
 
     example_card.save();
@@ -52,9 +59,15 @@ var jsonparser = bodyparser.json();
 app.use(express.static('public'));
 app.use('/static',express.static('static'));
 app.get('/', routes.index);
+
 app.get('/card/:id', routes.get_cards);
 app.post('/card', jsonparser, routes.create_card);
-app.get('/card/', routes.get_all_cards);
+app.get('/card', routes.get_all_cards);
+
+app.get('/deck', routes.get_decks);
+app.get('/deck/:deck', routes.get_deck);
+app.post('/deck', jsonparser, routes.create_deck);
+
 app.post('/upload', upload.single('file'), routes.upload_file);
 
 var private_key = fs.readFileSync('ssl/server.key', 'utf-8');

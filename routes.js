@@ -1,5 +1,6 @@
 var card_model = require('./models/modelCard');
 var media_model = require('./models/modelMedia');
+var deck_model = require('./models/modelDeck');
 var crypto = require('crypto');
 var fs = require('fs');
 
@@ -56,7 +57,7 @@ exports.upload_file = function(req,res){
  *     ]
  * }
  */
-exports.create_card = function(req, res){
+exports.create_card = function(req, res, next){
     var media_list =[];
     console.log(req.body)
     for(var m of req.body.media){
@@ -68,4 +69,39 @@ exports.create_card = function(req, res){
     var new_card = new card_model({media:media_list});
     new_card.save();
     res.send(new_card._id);
+    next();
 };
+
+exports.get_decks = function(req, res, next){
+    card_model.find().distinct('decks', function(err, cols){
+        if(err){
+            console.log(err);
+        }
+        res.send(cols);
+    });
+}
+
+exports.get_deck = function(req, res){
+    deck_id = req.params.deck 
+    card_model.findOne({'decks._id': deck_id}, function(err, cards){
+        if(err){
+            console.log(err);
+        }
+        res.send(cards);
+    });
+}
+
+exports.create_deck = function(req, res){
+    var new_deck = new deck_model({title: req.body.title, desc: req.body.desc});
+    new_deck.save(function(error, deck, n){
+        card_model.findByIdAndUpdate(
+                req.body.cards,
+                {$push: {"decks": deck}},
+                {safe: true, upsert:true},
+                function(err, _){
+                    console.log(deck._id);
+                    res.send(deck._id);
+                }
+        );
+    });
+}
