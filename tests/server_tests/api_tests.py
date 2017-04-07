@@ -52,3 +52,39 @@ class TestGetCalls(unittest.TestCase):
         resp_text = r.text
         self.assertEqual(r.status_code, 200)
         self.assertEqual(len(resp_text), 26)
+    
+    def test_getDecks(self):
+        """Check that we can get all the decks"""
+
+        r = requests.get(TEST_URL+'/deck')
+
+        self.assertEqual(r.status_code, 200)
+
+        decks = r.json()
+        self.assertTrue(len(decks) != 0)
+        self.assertTrue("_id" in decks[0])
+        self.assertTrue("title" in decks[0])
+        self.assertTrue("desc" in decks[0])
+
+    def test_getDeck(self):
+        r = requests.get(TEST_URL+'/deck')
+        deck_id = r.json()[0]["_id"]
+        
+        cards_r = requests.get(TEST_URL+'/deck/'+deck_id)
+        
+        self.assertEqual(cards_r.status_code, 200)
+        cards = cards_r.json()
+        self.assertTrue(len(cards) != 0)
+    
+    def test_makeDeck(self):
+        cards = requests.get(TEST_URL+"/card/").json()
+        card_ids = [c['_id'] for c in cards]
+
+        req_json ={'title': 'Uploaded Deck', 'desc': 'An deck from the test '\
+        'program', 'cards': card_ids }
+
+        r = requests.post(TEST_URL+'/deck', json=req_json)
+
+        self.assertEqual(r.status_code, 200)
+        self.assertTrue(len(r.text) != 0)
+
