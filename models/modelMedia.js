@@ -1,7 +1,10 @@
 var Schema = require('mongoose').Schema
 
 var media_schema = Schema({
-    type: {String, required:true},
+    type: {
+        type:String,
+        required : [true, 'A media must have a type']
+    },
     url: String,
     text: String
 });

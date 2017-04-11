@@ -44,6 +44,10 @@ class TestGetCalls(unittest.TestCase):
         media_type = r_json['media_type']
         self.assertEqual(media_type, 'image')
 
+    def test_UploadFileVideo(self):
+        pass
+
+
     def test_CreateCard(self):
         """Check that creating a file works"""
 
@@ -55,6 +59,7 @@ class TestGetCalls(unittest.TestCase):
         media_list = []
         media_list.append({'type':'image', 'url':imgpath})
         media_list.append({'type':'text', 'text':'ASL'})
+        media_list.append({'type':'text', 'text':'American Sign Language (ASL) is a natural language that serves as the predominant sign language of Deaf communities'})
         r = requests.post(TEST_URL+'/card', json={'media':media_list})
         
         resp_text = r.text.strip('"')
@@ -66,12 +71,17 @@ class TestGetCalls(unittest.TestCase):
         self.assertEqual(r.status_code, 200)
         returned_card = r.json()
         self.assertTrue('media' in returned_card)
-        self.assertEqual(len(returned_card['media']), 2)
+        self.assertEqual(len(returned_card['media']), 3)
         media = returned_card['media']
         self.assertTrue('type' in media[0])
         self.assertTrue('type' in media[1])
+        self.assertTrue('type' in media[2])
+        self.assertEqual(media[0]['type'], 'image')
+        self.assertEqual(media[1]['type'], 'text')
+        self.assertEqual(media[2]['type'], 'text')
         self.assertTrue('url' in media[0])
         self.assertTrue('text' in media[1])
+        self.assertTrue('text' in media[2])
     
     def test_getDecks(self):
         """Check that we can get all the decks"""
