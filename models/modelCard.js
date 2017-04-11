@@ -3,7 +3,6 @@ var media_schema = require('./modelMedia').schema
 var deck_schema = require('./modelDeck').schema
 
 var card_schema = Schema({
-    id: Schema.ObjectId,
     media:[media_schema],
     decks:[deck_schema]
 });

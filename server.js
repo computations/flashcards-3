@@ -12,6 +12,7 @@ global.db = mongoose.createConnection(uri);
 var media_model = require('./models/modelMedia')
 var card_model = require('./models/modelCard')
 var deck_model = require('./models/modelDeck')
+var user_model = require('./models/modelUser')
 var app = express();
 var routes = require('./routes');
 
