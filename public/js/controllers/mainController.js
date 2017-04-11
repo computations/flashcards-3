@@ -11,6 +11,7 @@ app.controller('mainController', ['$scope','$http', 'Upload', '$sce', function (
 	        console.log(success)
 	        console.log(success.data[0].media[0].url)
 	        console.log(success.data.length)
+	        
 	        var div = ""
 	        for(var i=0; i<success.data.length; i++){
 	            var html = '<div class="col-sm-4 col-lg-4 col-md-4">';

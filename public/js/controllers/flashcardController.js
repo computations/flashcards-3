@@ -11,14 +11,15 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($s
     $scope.textVal = "true";
     $scope.deck = [$scope.cards];
 
-    $scope.newSide = function(med, Url){
-        if(Url=="Enter text here"){
-            Url=""
+    $scope.newSide = function(med, Url, tex){
+        if(tex=="Enter text here"){
+            tex=""
         }
-
+        
         $scope.cards.push({
             media: med, 
-            url: Url 
+            url: Url,
+            text: tex
         }) 
     };
 
@@ -36,7 +37,13 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($s
 
             }).success(function(response,status){
                
-                $scope.newSide(response.media_type, urlPrefix + response.url)
+               if(response.media_type=="text"){
+                    $scope.newSide(response.media_type, "", response.text)
+               }
+               else{
+                    $scope.newSide(response.media_type, urlPrefix + response.url)
+               }
+                
 
             }).error(function(err){
                 //error
@@ -56,6 +63,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($s
                                     //each side is json
         }).then(function(res){
             console.log(res)
+            console.log(res.data)
 
         }, function(error){
             console.log(error)
