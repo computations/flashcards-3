@@ -22,7 +22,7 @@ var CARD_KEYS = ['media']
 exports.get_cards = function(req, res){
     console.log("connection from " + req.ip);
     card_model.find({_id: req.params.id}, function(err, cards){
-        if(err) return console.err(err);
+        if(err) return console.log(err);
         if(cards.length!=1){
             res.send([]);
         }
@@ -62,13 +62,11 @@ exports.create_card = function(req, res, next){
     console.log("Hello, is it me you're looking for?")
     console.log(req.body)
     for(var m of req.body.media){
-        media_list.push( new media_model({
-            type: m.type,
-            url: m.url
-        }));
+        media_list.push( new media_model(m));
     }
     var new_card = new card_model({media:media_list});
     new_card.save();
+    console.log(new_card._id);
     res.send(new_card._id);
     //next();
 };
