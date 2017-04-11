@@ -3,7 +3,7 @@
 A card is a json object that will contain either content of a card, or
 references to content of a card. A request of the form
 
-    <url>/cards/[number]
+    <url>/card/[number]
 
 will return a json object.
 
@@ -26,8 +26,9 @@ Post a json object to `<url>/card` with the following object
 ```
 {
     media: [{
-        type: 
-        url: 
+        type: <STRING>
+        url: <URL>
+        text: <STRING>
     },...]
 }
 ```

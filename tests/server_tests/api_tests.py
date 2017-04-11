@@ -54,11 +54,24 @@ class TestGetCalls(unittest.TestCase):
 
         media_list = []
         media_list.append({'type':'image', 'url':imgpath})
+        media_list.append({'type':'text', 'text':'ASL'})
         r = requests.post(TEST_URL+'/card', json={'media':media_list})
         
-        resp_text = r.text
+        resp_text = r.text.strip('"')
+        print(resp_text)
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(len(resp_text), 26)
+        #get the card
+
+        r = requests.get(TEST_URL+'/card/'+resp_text)
+        self.assertEqual(r.status_code, 200)
+        returned_card = r.json()
+        self.assertTrue('media' in returned_card)
+        self.assertEqual(len(returned_card['media']), 2)
+        media = returned_card['media']
+        self.assertTrue('type' in media[0])
+        self.assertTrue('type' in media[1])
+        self.assertTrue('url' in media[0])
+        self.assertTrue('text' in media[1])
     
     def test_getDecks(self):
         """Check that we can get all the decks"""
