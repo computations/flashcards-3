@@ -45,8 +45,23 @@ class TestGetCalls(unittest.TestCase):
         self.assertEqual(media_type, 'image')
 
     def test_UploadFileVideo(self):
-        pass
+        with open(TEST_CONTENT+"/test_2.webm", 'rb') as testimg:
+            files = { 'file':('test_2.webm', testimg, 'video/webm')}
+            r = requests.post(TEST_URL+"/upload", files=files)
 
+        self.assertEqual(r.status_code, 200)
+        r_json = r.json()
+
+        self.assertTrue('url' in r_json)
+        self.assertTrue('media_type' in r_json)
+
+        img_path = r_json['url'].split('/')
+        self.assertEqual(img_path[0], 'static')
+        self.assertEqual(img_path[1], 'video')
+        self.assertEqual(len(img_path[2]), 64)
+
+        media_type = r_json['media_type']
+        self.assertEqual(media_type, 'video')
 
     def test_CreateCard(self):
         """Check that creating a file works"""
