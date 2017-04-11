@@ -32,3 +32,23 @@ Post a json object to `<url>/card` with the following object
     },...]
 }
 ```
+
+In angular this winds up being
+
+```
+    $http({
+        method: 'POST',
+        url: <SERVER>,
+        data:{ 'media' : <LIST OF MEDIA> }
+    });
+```
+
+and a media object is the following
+
+```
+    {
+        type: <STRING> (REQUIRED),
+        url: <URL> (OPTIONAL),
+        text: <STRING> (OPTIONAL)
+    }
+```
