@@ -54,11 +54,11 @@ exports.upload_file = function(req,res){
  */
 exports.create_card = function(req, res, next){
     var media_list =[];
-    console.log("Hello, is it me you're looking for?")
     console.log(req.body)
     for(var m of req.body.media){
         media_list.push( new media_model(m));
     }
+    console.log(media_list)
     var new_card = new card_model({media:media_list});
     new_card.save();
     console.log(new_card._id);

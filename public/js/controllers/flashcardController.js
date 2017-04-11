@@ -52,7 +52,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($s
         $http({
             method: 'POST',
             url: 'http://localhost:3000/card/',
-            body: $scope.cards[0] //An array of the card's sides, 
+            data:{'media': $scope.cards} //An array of the card's sides, 
                                     //each side is json
         }).then(function(res){
             console.log(res)
