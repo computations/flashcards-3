@@ -59,6 +59,7 @@ exports.upload_file = function(req,res){
  */
 exports.create_card = function(req, res, next){
     var media_list =[];
+    console.log("Hello, is it me you're looking for?")
     console.log(req.body)
     for(var m of req.body.media){
         media_list.push( new media_model({
@@ -69,7 +70,7 @@ exports.create_card = function(req, res, next){
     var new_card = new card_model({media:media_list});
     new_card.save();
     res.send(new_card._id);
-    next();
+    //next();
 };
 
 exports.get_decks = function(req, res, next){

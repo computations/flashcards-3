@@ -1,29 +1,7 @@
 //flashcard.js
 
-app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upload) {
-    $scope.cards = [
-        {
-            title: "Good Morning",
-            icon: "",
-            imageUrl: "",
-            videoUrl: "",
-            description: ""
-        },
-        {
-            title: "",
-            icon:"",
-            imageUrl:"http://www.lifeprint.com/asl101/gifs-animated/no-one.gif",
-            videoUrl: "",
-            description:""
-        },
-        {
-            title: "Greeting",
-            icon:"",
-            imageUrl:"",
-            videoUrl: "",
-            description:"A greeting to an aquaintance typically stated in the morning"
-        }
-    ];
+app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($scope, Upload, $http) {
+    $scope.cards = [];
     $scope.currentCard = $scope.cards[0];
     $scope.cardCounter = 0;
     $scope.isCardRevealed = true;
@@ -33,15 +11,14 @@ app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upl
     $scope.textVal = "true";
     $scope.deck = [$scope.cards];
 
-    $scope.newSide = function(text,title,imgUrl){
-        if(text=="Enter text here"){
-            text=""
+    $scope.newSide = function(med, Url){
+        if(Url=="Enter text here"){
+            Url=""
         }
+
         $scope.cards.push({
-            title: title,
-            icon:"",
-            imageUrl:imgUrl,
-            description:text
+            media: med, 
+            url: Url 
         }) 
     };
 
@@ -58,36 +35,12 @@ app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upl
                 file: file
 
             }).success(function(response,status){
-                Logger.log(response.media_type)
-                if(response.media_type == "video"){
-                    Logger.log(urlPrefix + response.url)
-                    //Add new img to preview card//test only
-                    $scope.cards.push({
-                        title: "",
-                        icon:"",
-                        imageUrl: "",
-                        videoUrl: urlPrefix + response.url,
-                        description:""
-                    }) 
-                }
-                else if(response.media_type == "image"){
-                    //Add new img to preview card//test only
-                    $scope.cards.push({
-                        title: "",
-                        icon:"",
-                        imageUrl: urlPrefix + response.url,
-                        videoUrl: "",
-                        description:""
-                    }) 
-                }
-                else{
-                    Logger.log("Media type is not supported.")
-                }
-
+               
+                $scope.newSide(response.media_type, urlPrefix + response.url)
 
             }).error(function(err){
                 //error
-                console.log("Error occurred while sending " +
+                Logger.log("Error occurred while sending " +
                  "file to server: " + err)
             }); 
         }
@@ -95,42 +48,23 @@ app.controller('flashcardController', ['$scope', 'Upload', function ($scope, Upl
 
 
     $scope.addNewCard = function(){
-        //Inject HTML into DIV object, show all cards on home page
+       console.log($scope.cards)
+        $http({
+            method: 'POST',
+            url: 'http://localhost:3000/card/',
+            body: $scope.cards[0] //An array of the card's sides, 
+                                    //each side is json
+        }).then(function(res){
+            console.log(res)
 
-        var div = ""
-        for(var i=0; i<$scope.cards.length; i++){
-            var html = '<div class="col-sm-4 col-lg-4 col-md-4">';
-            html += '<div class="thumbnail">';
-            html += '<img src="http://placehold.it/320x150" alt="">';
-            html += '<div class="caption">';
-            html += '<h4><a href="#!card">' + $scope.cards[i].title + '</a>'; 
-            html += '</h4>'; 
-            html += '<p>Test cards generated</p>'; 
-            html += '</div>'; 
-            html += '</div>'; 
-            html += '</div>'; 
-
-            div += html; 
-        }
-        $scope.deckHTML = div; 
-
-  
+        }, function(error){
+            console.log(error)
+        });
     };
 
     $scope.flipCard = function() {
         $scope.isCardRevealed = !$scope.isCardRevealed;
         $scope.generateCard();
-        // if($scope.isCardRevealed) {
-        //    $scope.generateCard();
-        //
-        // } else {
-        //     $scope.generateCard();
-        // }
-        /*
-
-
-
-         */
     };
 
     $scope.generateCard = function() {
