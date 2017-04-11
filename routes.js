@@ -21,14 +21,9 @@ var CARD_KEYS = ['media']
 
 exports.get_cards = function(req, res){
     console.log("connection from " + req.ip);
-    card_model.find({_id: req.params.id}, function(err, cards){
+    card_model.findOne({_id: req.params.id}, function(err, cards){
         if(err) return console.log(err);
-        if(cards.length!=1){
-            res.send([]);
-        }
-        else{
-            res.send(cards[0]);
-        }
+        res.send(cards);
     });
 };
 
