@@ -17,8 +17,16 @@
         </div>
     </div>
 </div>
+    <div class="addmenu">
+        <ul class="nav navbar-nav">
+            <li><a ng-click = "toggleMenu(false, true, true, true)" id="addbutton"><i class ="fa fa-plus-square-o"></i> Add</a></li>
+            <li><a ng-click = "toggleMenu(true, false, true, true)" id="deletebutton"><i class = "fa fa-minus-square-o"></i> Delete</a></li>
+            <li><a ng-click = "toggleMenu(true, true, false, true)" id="editbutton"><i class = "fa fa-pencil-square-o"></i> Edit</a></li>
+            <li><a ng-click = "toggleMenu(true, true, true, false)" id="modifybutton"><i class = "fa fa-check-square-o"></i> Modify Order</a></li>
+        </ul>
+    </div>
+<div ng-hide="addmenu">
 
-<p>
     <h2>New Flashcard Side</h2>
     <!-- User add new side to card-->
     <!-- DEV NOTES, ng-model binds variable, ng-'action' calls angular function -->
@@ -26,10 +34,11 @@
     </textarea>
 
     <button ng-click="newSide('text','', text)">Submit Text</button>
-</p>
+    <h4>Upload File (Image/Video/Audio)
+        <button ngf-select="uploadFiles($file,$invalidFiles)">Upload File</button></h4>
 
-<h4>Upload File (Image/Video/Audio)</h4>
-<button ngf-select="uploadFiles($file,$invalidFiles)">Upload File</button>
-<button ng-click="addNewCard()">Accept New Card</button> 
-
+</div>
+    <div>
+        <button ng-click="addNewCard()">Save Card</button>
+    </div>
 </div>
