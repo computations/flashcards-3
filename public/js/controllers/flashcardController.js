@@ -1,6 +1,7 @@
 //flashcard.js
 
-app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($scope, Upload, $http) {
+app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', function ($scope, Upload, $http, ngDialog) {
+
     $scope.addmenu = true;
     $scope.deletemenu = true;
     $scope.editmenu = true;
@@ -22,13 +23,6 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($s
         $scope.deletemenu = del;
         $scope.editmenu = edit;
         $scope.modifymenu = modify;
-        $scope.textmenu = true;
-        $scope.videomenu = true;
-    };
-
-    $scope.toggleAddMenu = function(text, video) {
-        $scope.textmenu = text;
-        $scope.videomenu = video;
     };
 
     $scope.newSide = function(med, Url, tex){
@@ -76,6 +70,27 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($s
 
     $scope.addNewCard = function(){
        console.log($scope.cards)
+
+       var html = "<div>"
+       html += "<script type='text/ng-template' id='confirmCard'>"
+       html += "<h1>Name of</h1></script>"
+       html += "<p>{{hello}}</p>"
+       html += "</script>"
+       html += "</div>"
+
+       //Prompt the user to name the card
+       ngDialog.open({
+                template: 'confirmCard.html',
+                plain: true, //Uncomment this line to use variable text instead of file
+                width: 400,
+                height: 400,
+                className: 'ngdialog-theme-plain',
+                controller: ['$scope', function($scope){
+                    $scope.hello = "HI!"
+                }]
+
+        });
+
         $http({
             method: 'POST',
             url: 'http://localhost:3000/card/',

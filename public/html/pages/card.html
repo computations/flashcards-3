@@ -6,13 +6,13 @@
         <div class="back" ng-class="{'face-hidden':hideBackFace}">
             <h1 ng-if="currentCard.media=='text' && currentCard.text && !isCardRevealed">{{currentCard.text | uppercase}}</h1>
             <img ng-if="currentCard.url && currentCard.media=='image' && !isCardRevealed" src="{{currentCard.url}}" alt="currentCard.imageAlt" />
-            <audio controls ng-if=" currentCard.media=='audio' && currentCard.url && !isCardRevealed" src="{{currentCard.url}}" alt="currentCard.imageAlt" /></audio> 
+            <audio controls loop autoplay="autoplay" ng-if=" currentCard.media=='audio' && currentCard.url && !isCardRevealed" src="{{currentCard.url}}" alt="currentCard.imageAlt" /></audio> 
             <video controls loop autoplay="autoplay" ng-if="currentCard.media=='video' && currentCard.url && !isCardRevealed" width="640" height="360" src="{{currentCard.url}}" frameborder="0" allowfullscreen></video> 
         </div>
         <div class="front" ng-class="{'face-hidden':!hideBackFace}">
             <h1 ng-if="currentCard.media=='text' && currentCard.text && isCardRevealed">{{currentCard.text | uppercase}}</h1>
             <img ng-if="currentCard.url && currentCard.media=='image' && isCardRevealed" src="{{currentCard.url}}" alt="currentCard.imageAlt" />
-            <audio controls ng-if=" currentCard.media=='audio' && currentCard.url && isCardRevealed" src="{{currentCard.url}}" alt="currentCard.imageAlt" /></audio> 
+            <audio controls loop autoplay="autoplay" ng-if=" currentCard.media=='audio' && currentCard.url && isCardRevealed" src="{{currentCard.url}}" alt="currentCard.imageAlt" /></audio> 
             <video controls loop autoplay="autoplay" ng-if="currentCard.media=='video' && currentCard.url && isCardRevealed" width="640" height="360" src="{{currentCard.url}}" frameborder="0" allowfullscreen></video> 
         </div>
     </div>
@@ -49,5 +49,4 @@
     <div>
         <button style="margin-top:2.5em;" ng-click="addNewCard()" class="btn btn-default">Save Card</button>
     </div>
-
 </div>

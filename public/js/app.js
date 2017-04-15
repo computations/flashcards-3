@@ -12,7 +12,7 @@ var Logger = (function () {
 }());
 
 //app controller is the main controller for site (routes)
-var app = angular.module('app',['ngAnimate', 'ngFileUpload', 'ngRoute', 'ngSanitize']);
+var app = angular.module('app',['ngAnimate', 'ngFileUpload', 'ngRoute', 'ngSanitize', 'ngDialog']);
 
 app.config(function($routeProvider) {
     $routeProvider
