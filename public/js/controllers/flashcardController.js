@@ -1,6 +1,6 @@
 //flashcard.js
 
-app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($scope, Upload, $http) {
+app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', function ($scope, Upload, $http, ngDialog) {
     $scope.cards = [];
     $scope.currentCard = $scope.cards[0];
     $scope.cardCounter = 0;
@@ -15,7 +15,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($s
         if(tex=="Enter text here"){
             tex=""
         }
-        
+
         $scope.cards.push({
             media: med, 
             url: Url,
@@ -56,6 +56,27 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($s
 
     $scope.addNewCard = function(){
        console.log($scope.cards)
+
+       var html = "<div>"
+       html += "<script type='text/ng-template' id='confirmCard'>"
+       html += "<h1>Name of</h1></script>"
+       html += "<p>{{hello}}</p>"
+       html += "</script>"
+       html += "</div>"
+
+       //Prompt the user to name the card
+       ngDialog.open({
+                template: 'confirmCard.html',
+                plain: true, //Uncomment this line to use variable text instead of file
+                width: 400,
+                height: 400,
+                className: 'ngdialog-theme-plain',
+                controller: ['$scope', function($scope){
+                    $scope.hello = "HI!"
+                }]
+
+        }); 
+
         $http({
             method: 'POST',
             url: 'http://localhost:3000/card/',
