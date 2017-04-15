@@ -180,6 +180,12 @@ footer a {
     height: 27em;
   }
 }
+.addmenu {
+  background-color: white;
+  margin-top: 2em;
+  display: inline-block;
+  float: none;
+}
 /*
 @media @tablet {
         .flip-container, .front, .back {

@@ -1,6 +1,10 @@
 //flashcard.js
 
 app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($scope, Upload, $http) {
+    $scope.addmenu = true;
+    $scope.deletemenu = true;
+    $scope.editmenu = true;
+    $scope.modifymenu = true;
     $scope.cards = [];
     $scope.currentCard = $scope.cards[0];
     $scope.cardCounter = 0;
@@ -10,6 +14,13 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($s
     $scope.clickBack = true;
     $scope.textVal = "true";
     $scope.deck = [$scope.cards];
+
+    $scope.toggleMenu = function (add, del, edit, modify) {
+        $scope.addmenu = add;
+        $scope.deletemenu = del;
+        $scope.editmenu = edit;
+        $scope.modifymenu = modify;
+    };
 
     $scope.newSide = function(med, Url, tex){
         if(tex=="Enter text here"){
