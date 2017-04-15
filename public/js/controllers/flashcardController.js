@@ -5,6 +5,8 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($s
     $scope.deletemenu = true;
     $scope.editmenu = true;
     $scope.modifymenu = true;
+    $scope.textmenu = true;
+    $scope.videomenu = true;
     $scope.cards = [];
     $scope.currentCard = $scope.cards[0];
     $scope.cardCounter = 0;
@@ -20,6 +22,13 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http', function ($s
         $scope.deletemenu = del;
         $scope.editmenu = edit;
         $scope.modifymenu = modify;
+        $scope.textmenu = true;
+        $scope.videomenu = true;
+    };
+
+    $scope.toggleAddMenu = function(text, video) {
+        $scope.textmenu = text;
+        $scope.videomenu = video;
     };
 
     $scope.newSide = function(med, Url, tex){

@@ -17,29 +17,37 @@
         </div>
     </div>
 </div>
-    <div class="addmenu">
+    <div class="addmenucontext">
         <ul class="nav navbar-nav">
-            <li><a ng-click = "toggleMenu(false, true, true, true)" id="addbutton"><i class ="fa fa-plus-square-o"></i> Add</a></li>
-            <li><a ng-click = "toggleMenu(true, false, true, true)" id="deletebutton"><i class = "fa fa-minus-square-o"></i> Delete</a></li>
-            <li><a ng-click = "toggleMenu(true, true, false, true)" id="editbutton"><i class = "fa fa-pencil-square-o"></i> Edit</a></li>
-            <li><a ng-click = "toggleMenu(true, true, true, false)" id="modifybutton"><i class = "fa fa-check-square-o"></i> Modify Order</a></li>
+            <li><a style="color:black;" ng-click = "toggleMenu(false, true, true, true)" ><i class ="fa fa-plus-square-o"></i> Add</a></li>
+            <li><a style="color:black;" ng-click = "toggleMenu(true, false, true, true)" ><i class = "fa fa-minus-square-o"></i> Delete</a></li>
+            <li><a style="color:black;" ng-click = "toggleMenu(true, true, false, true)" ><i class = "fa fa-pencil-square-o"></i> Edit</a></li>
+            <li><a style="color:black;" ng-click = "toggleMenu(true, true, true, false)" ><i class = "fa fa-check-square-o"></i> Modify Order</a></li>
         </ul>
     </div>
 <div ng-hide="addmenu">
 
-    <h2>New Flashcard Side</h2>
+    <h2>Add New Side</h2>
+    <div class="addselectmenu">
+        <button ng-click="toggleAddMenu(false,true)" class="btn btn-default"><i class = "fa fa-file-text-o"></i> Add Text</button> OR
+        <button ng-click="toggleAddMenu(true,false)" class="btn btn-default"><i class = "fa fa-file-image-o"></i> Add Media</button>
+    </div>
     <!-- User add new side to card-->
     <!-- DEV NOTES, ng-model binds variable, ng-'action' calls angular function -->
-    <textarea rows="10" cols="75" ng-model="text" ng-init="text='Enter text here'">
-    </textarea>
-
-    <button ng-click="newSide('text','', text)">Submit Text</button>
-    <h4>Upload File (Image/Video/Audio)
-        <button ngf-select="uploadFiles($file,$invalidFiles)">Upload File</button></h4>
+    <div ng-hide="textmenu">
+        <div class="textbox">
+            <textarea rows="10" cols="75" ng-model="text" ng-init="text=''"> </textarea>
+        </div>
+        <button style="margin-top:0.75em;" ng-click="newSide('text','', text)" class="btn btn-default">Submit Text</button>
+    </div>
+    <div ng-hide="videomenu">
+        <div><h4>Upload File (Image/Video/Audio)</h4></div>
+        <button ngf-select="uploadFiles($file,$invalidFiles)" class="btn btn-default">Upload File</button>
+    </div>
 
 </div>
     <div>
-        <button ng-click="addNewCard()">Save Card</button>
+        <button style="margin-top:2.5em;" ng-click="addNewCard()" class="btn btn-default">Save Card</button>
     </div>
 
 </div>
