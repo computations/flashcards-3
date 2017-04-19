@@ -23,6 +23,13 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', f
         $scope.deletemenu = del;
         $scope.editmenu = edit;
         $scope.modifymenu = modify;
+        $scope.textmenu=true;
+        $scope.videomenu=true;
+    };
+
+    $scope.toggleAddMenu = function(text, video) {
+        $scope.textmenu=text;
+        $scope.videomenu=video;
     };
 
     $scope.newSide = function(med, Url, tex){
