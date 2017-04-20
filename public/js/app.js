@@ -136,13 +136,8 @@ app.directive('loadCards', function ($http, $compile) {
             }
             html = div 
 
-           /* scope.$watch(attrs.dynamic, function(html) {
-                if (!html) {
-                    return;
-                } */
-                ele.html((typeof(html) === 'string') ? html : html.data);
-                $compile(ele.contents())(scope);
-          /*  }); */
+            ele.html((typeof(html) === 'string') ? html : html.data);
+            $compile(ele.contents())(scope);
 
         }, function(error){
             console.log(error)

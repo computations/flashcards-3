@@ -14,7 +14,8 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog',  
     $scope.deletemenu = true;
     $scope.editmenu = true;
     $scope.modifymenu = true;
-
+    $scope.textmenu = true;
+    $scope.videomenu = true;
     $scope.cards = [];
     $scope.currentCard = $scope.cards[0];
     $scope.cardCounter = 0;
@@ -30,13 +31,20 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog',  
         $scope.deletemenu = del;
         $scope.editmenu = edit;
         $scope.modifymenu = modify;
+        $scope.textmenu=true;
+        $scope.videomenu=true;
+    };
+
+    $scope.toggleAddMenu = function(text, video) {
+        $scope.textmenu=text;
+        $scope.videomenu=video;
     };
 
     $scope.newSide = function(med, Url, tex){
         if(tex=="Enter text here"){
             tex=""
         }
-
+        
         $scope.cards.push({
             media: med, 
             url: Url,
@@ -115,18 +123,6 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog',  
                         }, function(error){
                             console.log(error)
                         });
-
-                        $http({
-            method: 'GET',
-            url: 'http://localhost:3000/card'
-        }).then(function(success){
-            console.log(success.data.length)
-            console.log(success.data)
-
-
-        }, function(error){
-            console.log(error)
-        });
 
                         //close the dialog box
                         ngDialog.close()
