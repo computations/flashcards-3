@@ -9,7 +9,7 @@ exports.get_all_cards = function(req, res, next){
         if(err) return next(err);
         return res.send(docs);
     });
-   // next(); Creates error 
+    next(); //Creates error 
 }
 
 exports.index = function(req, res){

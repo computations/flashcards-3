@@ -90,8 +90,64 @@ app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $
 
 }]);
 
-app.controller('mainController', ['$scope', 'Upload', function ($scope, Upload) {
+//A service to send data from main controller to flashcard controller
+    //so = if a card is clicked, show its server data, otherwise blank
+app.service("isLegitCard", function(){
+    var card = {}; 
 
+    return {
+        getCard: function(){
+            return card; 
+        },
+        sendCard: function(val){
+            card = val 
+        }
+    }; 
+}); 
 
-}]);
+// Stolen from: http://stackoverflow.com/questions/18157305/angularjs-compiling-dynamic-html-strings-from-database
+app.directive('loadCards', function ($http, $compile) {
+  return {
+    restrict: 'AE',
+    replace: true,
+    link: function (scope, ele, attrs) {
+        console.log("linked")
+                //Gets all the cards from the server
+            //Usage: Check API.md for URL needed
+        $http({
+            method: 'GET',
+            url: 'http://localhost:3000/card'
+        }).then(function(success){
+            console.log(success.data.length)
+            console.log(success.data)
+            var div = ""
+            for(var i=0; i<success.data.length; i++){
+                var html = '<div class="col-sm-4 col-lg-4 col-md-4">';
+                html += '<div class="thumbnail">';
+                html += '<img src="http://placehold.it/320x150" alt="">';
+                html += '<div class="caption">';
+                html += '<h4><a href="#!card" ng-click="clicked(3)">' + "Card Title" + '</a>'; 
+                html += '</h4>'; 
+                html += '<p>' + "Description" + '</p>'; 
+                html += '</div>'; 
+                html += '</div>'; 
+                html += '</div>'; 
+                div += html; 
+            }
+            html = div 
 
+           /* scope.$watch(attrs.dynamic, function(html) {
+                if (!html) {
+                    return;
+                } */
+                ele.html((typeof(html) === 'string') ? html : html.data);
+                $compile(ele.contents())(scope);
+          /*  }); */
+
+        }, function(error){
+            console.log(error)
+        });
+
+      }
+    }
+  })

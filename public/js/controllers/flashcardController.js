@@ -1,6 +1,14 @@
 //flashcard.js
 
-app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', function ($scope, Upload, $http, ngDialog) {
+app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog',  function ($scope, Upload, $http, ngDialog) {
+
+    //We came to this page, the card is a new one
+    if($scope.blankCard){
+
+    }
+    else{
+
+    }
 
     $scope.addmenu = true;
     $scope.deletemenu = true;
@@ -68,40 +76,68 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', f
 
 
     $scope.addNewCard = function(){
-       console.log($scope.cards)
 
+       //Dialog Box HTML
        var html = "<div>"
-       html += "<script type='text/ng-template' id='confirmCard'>"
-       html += "<h1>Name of</h1></script>"
-       html += "<p>{{hello}}</p>"
-       html += "</script>"
+       html += ""
+       html += "<h1>Name of Card</h1>"
+       html += "<input type='text' ng-model='cardTitle'><br>"
+       html += "<h2>Short Description of Card</h2>"
+       html += "<input type='text' ng-model='cardDescription'><br>"
        html += "</div>"
+       html += "<p>"
+       html += "<button ng-click='cancel()'>Cancel</button>"
+       html += "<button ng-click='confirm()'>Confirm</button>"
+       html += "</p>"
+
+       var card = $scope.cards 
 
        //Prompt the user to name the card
        ngDialog.open({
-                template: 'confirmCard.html',
+                template: html,
                 plain: true, //Uncomment this line to use variable text instead of file
                 width: 400,
                 height: 400,
                 className: 'ngdialog-theme-plain',
-                controller: ['$scope', function($scope){
-                    $scope.hello = "HI!"
-                }]
+                controller:  ['$scope', function($scope){
 
-        }); 
+                    $scope.confirm = function(){
+                        //Send the card with the title and description
+                        $http({
+                            method: 'POST',
+                            url: 'http://localhost:3000/card/',
+                            data:{'media': card} //An array of the card's sides, 
+                                                    //each side is json
+                        }).then(function(res){
+                            console.log(res)
+                            console.log(res.data)
 
-        $http({
-            method: 'POST',
-            url: 'http://localhost:3000/card/',
-            data:{'media': $scope.cards} //An array of the card's sides, 
-                                    //each side is json
-        }).then(function(res){
-            console.log(res)
-            console.log(res.data)
+                        }, function(error){
+                            console.log(error)
+                        });
+
+                        $http({
+            method: 'GET',
+            url: 'http://localhost:3000/card'
+        }).then(function(success){
+            console.log(success.data.length)
+            console.log(success.data)
+
 
         }, function(error){
             console.log(error)
         });
+
+                        //close the dialog box
+                        ngDialog.close()
+                    }
+
+                    $scope.cancel = function(){
+                        ngDialog.close()
+                    }
+                }]
+ 
+        }); 
     };
 
     $scope.flipCard = function() {
