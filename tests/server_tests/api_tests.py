@@ -66,6 +66,7 @@ class TestGetCalls(unittest.TestCase):
     def test_CreateCard(self):
         """Check that creating a file works"""
 
+        pre_num_cards = len(requests.get(TEST_URL+'/card').json())
         with open(TEST_CONTENT+"/test_1.svg", 'rb') as testimg:
             files = { 'file':('test_1.svg', testimg, 'image/svg+xml')}
             imgpath = requests.post(TEST_URL+"/upload",
@@ -82,6 +83,8 @@ class TestGetCalls(unittest.TestCase):
         self.assertEqual(r.status_code, 200)
         #get the card
 
+        new_num_cards = len(requests.get(TEST_URL+'/card').json())
+        self.assertEqual(pre_num_cards+1, new_num_cards)
         r = requests.get(TEST_URL+'/card/'+resp_text)
         self.assertEqual(r.status_code, 200)
         returned_card = r.json()
