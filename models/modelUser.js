@@ -8,6 +8,7 @@ var history_schema = Schema({
 var user_schema = Schema({
     username: {type:String, required: true, unique:true},
     pw_hash: {type: String, required: true},
+    pw_salt: {type: String, required: true},
     card_history: [history_schema]
 });
 
