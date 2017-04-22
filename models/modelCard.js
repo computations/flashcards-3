@@ -5,7 +5,9 @@ var deck_schema = require('./modelDeck').schema
 var card_schema = Schema({
     id: Schema.ObjectId,
     media:[media_schema],
-    decks:[deck_schema]
+    decks:[deck_schema],
+    title: String,
+    description: String
 });
 
 module.exports = db.model('flashcards', card_schema);
