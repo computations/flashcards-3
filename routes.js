@@ -90,7 +90,7 @@ exports.get_decks = function(req, res, next){
 
 exports.get_deck = function(req, res){
     deck_id = req.params.deck 
-    card_model.findOne({'decks._id': deck_id}, function(err, cards){
+    card_model.find({'decks._id': deck_id}, function(err, cards){
         if(err){
             console.log(err);
         }
