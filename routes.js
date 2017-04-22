@@ -5,11 +5,12 @@ var crypto = require('crypto');
 var fs = require('fs');
 
 exports.get_all_cards = function(req, res, next){
+    console.log("getting all cards");
     card_model.find(function(err, docs){
         if(err) return next(err);
         return res.send(docs);
     });
-   // next(); Creates error 
+    //next(); //Creates error 
 }
 
 exports.index = function(req, res){
@@ -36,9 +37,16 @@ exports.upload_file = function(req,res){
     var hash = crypto.createHash('sha256')
     var hashed_file = hash.update(fs.readFileSync(req.file.path)).digest('hex');
     var filename=new_dir + hashed_file;
-    fs.rename(req.file.path, filename, function(){
-        res.send({'url': filename, 'media_type': file_type});
-    });
+    if(!fs.existsSync(filename)){
+        fs.rename(req.file.path, filename, function(){
+            res.send({'url': filename, 'media_type': file_type});
+        });
+    }
+    else{
+        fs.unlink(req.file.path, () => {
+            res.send({'url': filename, 'media_type': file_type});
+        });
+    }
 };
  
 /*
@@ -58,9 +66,14 @@ exports.create_card = function(req, res, next){
     for(var m of req.body.media){
         media_list.push( new media_model(m));
     }
+    console.log("requested media list");
     console.log(media_list)
     var new_card = new card_model({media:media_list});
-    new_card.save();
+    new_card.save((err) =>{
+        if(err){
+            console.log(err);
+        }
+    });
     console.log(new_card._id);
     res.send(new_card._id);
     next();

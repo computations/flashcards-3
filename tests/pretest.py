@@ -15,8 +15,9 @@ test_files = [
 for s, d in test_files:
     if not os.path.exists(d):
         print("getting test content: " + d)
-        if not os.path.exists('/'.join(os.path.split(d)[:-1])):
-            os.makedirs(d)
+        test_content_path = os.path.join(*os.path.split(d)[:-1])
+        if not os.path.exists(test_content_path):
+            os.makedirs(test_content_path)
         with open(d, 'w') as dest_file:
             dest_file.write(requests.get(s).text);
 
