@@ -52,3 +52,24 @@ and a media object is the following
         text: <STRING> (OPTIONAL)
     }
 ```
+
+##Users
+
+A user has the data members
+
+```
+{
+    username: <STRING> (REQUIRED, UNIQUE),
+    pw_hash: <STRING> (REQUIRED),
+    card_history: [histories]
+}
+```
+
+And a history is 
+
+```
+{
+    card: <CARD_ID> (REQUIRED),
+    correct_date: <DATE> (REQUIRED)
+}
+```
