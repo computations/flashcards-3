@@ -5,6 +5,8 @@ var mongoose = require('mongoose');
 var multer = require('multer');
 var bodyparser = require('body-parser');
 var fs = require('fs');
+var passport = require('passport');
+var google_strat = require('passport-google-oauth20').Strategy;
 
 var uri  = 'mongodb://localhost/flashcards';
 global.db = mongoose.createConnection(uri);
@@ -15,7 +17,6 @@ var deck_model = require('./models/modelDeck')
 var user_model = require('./models/modelUser')
 var app = express();
 var routes = require('./routes');
-
 
 /*
  * While we are testing, clear the database everytime the app starts
@@ -45,17 +46,21 @@ card_model.remove({}, function(err){
 });
 
 var storage = multer.diskStorage({
-	destination: function(req, file, cb){
-		cb(null, './uploads')
+    destination: function(req, file, cb){
+        cb(null, './uploads')
 
-	},
-	filename: function(req, file, cb){
-		cb(null, file.originalname);
-	}
+    },
+    filename: function(req, file, cb){
+        cb(null, file.originalname);
+    }
 });
 var upload = multer({storage: storage});
 
 var jsonparser = bodyparser.json();
+
+/*
+ * User auth stuff
+ */
 
 app.use(express.static('public'));
 app.use('/static',express.static('static'));
