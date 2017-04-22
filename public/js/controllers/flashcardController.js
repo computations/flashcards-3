@@ -10,8 +10,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.textmenu = true;
     $scope.videomenu = true;
     $scope.cards = [];
-    $scope.currentCard; 
-    console.log($scope.currentCard) 
+    $scope.currentCard;
     $scope.cardCounter = 0;
     $scope.isCardRevealed = true;
 
@@ -35,10 +34,6 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     };
 
     $scope.newSide = function(med, Url, tex){
-        if(tex=="Enter text here"){
-            tex=""
-        }
-        
         $scope.cards.push({
             type: med, 
             url: Url,
@@ -72,54 +67,113 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
 
 
     $scope.addNewCard = function(){
+        var deckID = isLegitCard.getDeck()
+        if(deckID==0){
+            //A new Deck obj to be created
+            //Dialog Box HTML
+           var html = "<div>"
+           html += ""
+           html += "<h3>Name of Card</h3>"
+           html += "<input type='text' ng-model='cardTitle'><br>"
+           html += "<h4>Short Description of Card</h4>"
+           html += "<input type='text' ng-model='cardDescription'><br>"
+           html += "<h3>Name of New Deck</h3>"
+           html += "<input type='text' ng-model='deckTitle'><br>"
+           html += "<h4>Short Description of Deck</h4>"
+           html += "<input type='text' ng-model='deckDescription'><br>"
+           html += "</div>"
+           html += "<p>"
+           html += "<button ng-click='cancel()'>Cancel</button>"
+           html += "<button ng-click='confirm()'>Confirm</button>"
+           html += "</p>"
 
-       //Dialog Box HTML
-       var html = "<div>"
-       html += ""
-       html += "<h1>Name of Card</h1>"
-       html += "<input type='text' ng-model='cardTitle'><br>"
-       html += "<h2>Short Description of Card</h2>"
-       html += "<input type='text' ng-model='cardDescription'><br>"
-       html += "</div>"
-       html += "<p>"
-       html += "<button ng-click='cancel()'>Cancel</button>"
-       html += "<button ng-click='confirm()'>Confirm</button>"
-       html += "</p>"
+           var card = $scope.cards 
 
-       var card = $scope.cards 
+           //Prompt the user to name the card
+           ngDialog.open({
+                    template: html,
+                    plain: true, 
+                    width: 400,
+                    height: 400,
+                    className: 'ngdialog-theme-plain',
+                    controller:  ['$scope', function($scope){
 
-       //Prompt the user to name the card
-       ngDialog.open({
-                template: html,
-                plain: true, //Uncomment this line to use variable text instead of file
-                width: 400,
-                height: 400,
-                className: 'ngdialog-theme-plain',
-                controller:  ['$scope', function($scope){
+                        //Make a new deck with card in it
+                        $scope.confirm = function(){
+                            //Send the card with the title and description
+                            $http({
+                                method: 'POST',
+                                url: 'http://localhost:3000/card/',
+                                data:{'media': card} //An array of the card's sides, 
+                                                        //each side is json
+                            }).then(function(res){
 
-                    $scope.confirm = function(){
-                        //Send the card with the title and description
-                        $http({
-                            method: 'POST',
-                            url: 'http://localhost:3000/card/',
-                            data:{'media': card} //An array of the card's sides, 
-                                                    //each side is json
-                        }).then(function(res){
+                            }, function(error){
+                                Logger.log(error)
+                            });
 
-                        }, function(error){
-                            Logger.log(error)
-                        });
+                            //close the dialog box
+                            ngDialog.close()
+                        }
 
-                        //close the dialog box
-                        ngDialog.close()
-                    }
+                        $scope.cancel = function(){
+                            ngDialog.close()
+                        }
+                    }]
+            }); 
+        }
+        else{
+            //Deck is already created, append card 
+            
+           //Dialog Box HTML
+           var html = "<div>"
+           html += ""
+           html += "<h1>Name of Card</h1>"
+           html += "<input type='text' ng-model='cardTitle'><br>"
+           html += "<h2>Short Description of Card</h2>"
+           html += "<input type='text' ng-model='cardDescription'><br>"
+           html += "</div>"
+           html += "<p>"
+           html += "<button ng-click='cancel()'>Cancel</button>"
+           html += "<button ng-click='confirm()'>Confirm</button>"
+           html += "</p>"
 
-                    $scope.cancel = function(){
-                        ngDialog.close()
-                    }
-                }]
- 
-        }); 
+           var card = $scope.cards 
+
+           //Prompt the user to name the card
+           ngDialog.open({
+                    template: html,
+                    plain: true, 
+                    width: 400,
+                    height: 400,
+                    className: 'ngdialog-theme-plain',
+                    controller:  ['$scope', function($scope){
+
+                        $scope.confirm = function(){
+                            //Send the card with the title and description
+                            $http({
+                                method: 'POST',
+                                url: 'http://localhost:3000/card/',
+                                data:{'media': card} //An array of the card's sides, 
+                                                        //each side is json
+                            }).then(function(res){
+
+                            }, function(error){
+                                Logger.log(error)
+                            });
+
+                            //close the dialog box
+                            ngDialog.close()
+                        }
+
+                        $scope.cancel = function(){
+                            ngDialog.close()
+                        }
+                    }]
+     
+            }); 
+        }
+
     };
 
     $scope.flipCard = function() {
@@ -139,13 +193,12 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         else{//loop it
             saveCounter = 0;
         }
-        console.log($scope.cards)
         $scope.cardCounter = saveCounter;
         $scope.currentCard = $scope.cards[$scope.cardCounter];
     }
 
     $scope.transformServerObjToCard = function(serverCards){
-        for(i=0; i<serverCards.media.length; ++i){
+        for(var i=0; i<serverCards.media.length; ++i){
             //type, url, text
             $scope.newSide(serverCards.media[i].type, serverCards.media[i].url,
                 serverCards.media[i].text)
@@ -154,8 +207,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
 
     $scope.getCard = function(){
         var cardID = isLegitCard.getCard()
-        if(cardID == {}){
+        if(cardID == {} || cardID == 0 || cardID == undefined){
             //nope, new card
+            return; 
         }
         else{
             //Get the card data from the server
@@ -175,20 +229,10 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.onload = function(){
         //see if it is a card that is already created
         $scope.getCard();  
-
-        //add delay for server card data to catch up
-        
-
-        $scope.currentCard = $scope.cards[0];
-        console.log($scope.currentCard);
-        $scope.currentCard = "test";
-        console.log($scope.cards)
-        console.log($scope.currentCard)
     }
 
     //call it on load
     $scope.onload(); 
-    
 
 }]);
 

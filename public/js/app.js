@@ -39,7 +39,11 @@ app.config(function($routeProvider) {
         .when('/signin', {
             templateUrl : '../html/pages/admin.html',
             controller  : 'adminController'
-        });
+        })
+        .when('/viewCardsInDeck', {
+            templateUrl : '../html/pages/viewCards.html',
+            controller : 'viewCardController'
+        }); 
 });
 
 
@@ -91,6 +95,7 @@ app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $
     //so = if a card is clicked, show its server data, otherwise blank
 app.service("isLegitCard", function(){
     var card = {}; 
+    var deck = {}; 
 
     return {
         getCard: function(){
@@ -98,33 +103,56 @@ app.service("isLegitCard", function(){
         },
         sendCard: function(val){
             card = val 
+        },
+        getDeck: function(){
+            return deck; 
+        },
+        sendDeck: function(val){
+            deck = val
         }
     }; 
 }); 
 
-// Stolen from: http://stackoverflow.com/questions/18157305/angularjs-compiling-dynamic-html-strings-from-database
-app.directive('loadCards', function ($http, $compile) {
+
+
+app.directive('loadCards', function ($http, $compile, isLegitCard) {
   return {
     restrict: 'AE',
     replace: true,
     link: function (scope, ele, attrs) {
-                //Gets all the cards from the server
-            //Usage: Check API.md for URL needed
+        //Get Deck ID
+        var deckID = isLegitCard.getDeck()
+        if(deckID == 0){
+            //Making a new deck, server won't respond
+            return; 
+        }
+
+        //Dynamically show all cards in this deck
         scope.$watch('onloadVar' , function(){
             $http({
             method: 'GET',
-            url: 'http://localhost:3000/card'
+            url: 'http://localhost:3000/deck/' + deckID
         }).then(function(success){
 
             var div = ""
-            for(var i=0; i<success.data.length; i++){
+            //Loop through the cards in the deck
+            for(var i=0; i<success.data.media.length; i++){
                 var html = '<div class="col-sm-4 col-lg-4 col-md-4">';
                 html += '<div class="thumbnail">';
-                html += '<img src="http://placehold.it/320x150" alt="">';
+
+                //find an image side on the card to view 
+                if(success.data.media[i].url){
+                    html += '<img src="' + success.data.media[i].url + '" alt="http://placehold.it/320x150">';
+                }
+                else{
+                    //replace image with default
+                    html += '<img src="http://placehold.it/320x150" alt="">'; 
+                }
+                
                 html += '<div class="caption">';
-                html += '<h4><a href="#!card" ng-click="toCard(&quot;' + success.data[i]._id.toString() + '&quot;)">' + success.data[i].title + '</a>'; 
+                html += '<h4><a href="#!card" ng-click="toCard(&quot;' + success.data.media[i]._id.toString() + '&quot;)">' + success.data.media[i].title + '</a>'; 
                 html += '</h4>'; 
-                html += '<p>' + success.data[i].description + '</p>'; 
+                html += '<p>' + success.data.media[i].description + '</p>'; 
                 html += '</div>'; 
                 html += '</div>'; 
                 html += '</div>'; 
@@ -144,3 +172,57 @@ app.directive('loadCards', function ($http, $compile) {
       }
     }
   })
+
+app.directive('loadDecks', function ($http, $compile) {
+  return {
+    restrict: 'AE',
+    replace: true,
+    link: function (scope, ele, attrs) {
+                //Gets all the cards from the server
+            //Usage: Check API.md for URL needed
+        scope.$watch('onloadDeckVar' , function(){
+            $http({
+            method: 'GET',
+            url: 'http://localhost:3000/deck'
+        }).then(function(success){
+
+            Logger.log(success.data)
+
+            var div = ""
+            for(var i=0; i<success.data.length; i++){
+                var html = '<div class="col-sm-4 col-lg-4 col-md-4">';
+                html += '<div class="thumbnail">';
+
+                //Use stored image in deck
+                if(success.data[i].imageUrl && success.data[i].imageUrl!=""){
+                    html += '<img src="' + success.data[i].imageUrl + '" alt="">'
+                }
+                else{
+                    //replace image with default
+                    html += '<img src="http://placehold.it/320x150" alt="">'; 
+                }
+                
+                html += '<div class="caption">';
+                html += '<h4><a href="#!viewCardsInDeck" ng-click="toCard(&quot;' + success.data[i]._id.toString() + '&quot;)">' + success.data[i].title + '</a>'; 
+                html += '</h4>'; 
+                html += '<p>' + success.data[i].desc + '</p>'; 
+                html += '</div>'; 
+                html += '</div>'; 
+                html += '</div>'; 
+                div += html; 
+            }
+            html = div 
+
+            ele.html((typeof(html) === 'string') ? html : html.data);
+            $compile(ele.contents())(scope);
+
+            }, function(error){
+                console.log(error)
+            });
+        });
+        
+
+      }
+    }
+  })
+
