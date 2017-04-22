@@ -111,10 +111,11 @@ app.directive('loadCards', function ($http, $compile) {
     restrict: 'AE',
     replace: true,
     link: function (scope, ele, attrs) {
-        console.log("linked")
                 //Gets all the cards from the server
             //Usage: Check API.md for URL needed
-        $http({
+        scope.$watch('onloadVar' , function(){
+            console.log("onloadVar changed")
+            $http({
             method: 'GET',
             url: 'http://localhost:3000/card'
         }).then(function(success){
@@ -126,9 +127,9 @@ app.directive('loadCards', function ($http, $compile) {
                 html += '<div class="thumbnail">';
                 html += '<img src="http://placehold.it/320x150" alt="">';
                 html += '<div class="caption">';
-                html += '<h4><a href="#!card" ng-click="clicked(3)">' + "Card Title" + '</a>'; 
+                html += '<h4><a href="#!card" ng-click="toCard(&quot;' + success.data[i]._id.toString() + '&quot;)">' + success.data[i].title + '</a>'; 
                 html += '</h4>'; 
-                html += '<p>' + "Description" + '</p>'; 
+                html += '<p>' + success.data[i].description + '</p>'; 
                 html += '</div>'; 
                 html += '</div>'; 
                 html += '</div>'; 
@@ -139,9 +140,11 @@ app.directive('loadCards', function ($http, $compile) {
             ele.html((typeof(html) === 'string') ? html : html.data);
             $compile(ele.contents())(scope);
 
-        }, function(error){
-            console.log(error)
+            }, function(error){
+                console.log(error)
+            });
         });
+        
 
       }
     }
