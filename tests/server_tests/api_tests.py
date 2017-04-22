@@ -102,6 +102,22 @@ class TestGetCalls(unittest.TestCase):
         self.assertTrue('url' in media[0])
         self.assertTrue('text' in media[1])
         self.assertTrue('text' in media[2])
+
+    def test_updateCard(self):
+        """Update card test"""
+        r = requests.get(TEST_URL+"/card/")
+        r_json = r.json();
+        card_id = r_json[0]["_id"]
+        c_r = requests.get(TEST_URL+"/card/"+card_id).json()
+
+        update_card = {}
+        update_card['media'] = c_r['media']
+        update_card['media'].append({'type': 'text', 'text':'Added media via\
+        update card'})
+        update_card['title'] = 'An updated title'
+        update_card['description'] = 'An updated description'
+        u_r = requests.post(TEST_URL+'/card/'+card_id, json=update_card)
+        self.assertEqual(u_r.status_code, 200)
     
     def test_getDecks(self):
         """Check that we can get all the decks"""
@@ -125,16 +141,16 @@ class TestGetCalls(unittest.TestCase):
         self.assertEqual(cards_r.status_code, 200)
         cards = cards_r.json()
         self.assertTrue(len(cards) != 0)
+        self.assertTrue(type(cards) is list)
     
     def test_makeDeck(self):
         cards = requests.get(TEST_URL+"/card/").json()
         card_ids = [c['_id'] for c in cards]
 
         req_json ={'title': 'Uploaded Deck', 'desc': 'An deck from the test '\
-        'program', 'cards': card_ids }
+                'program', 'cards': card_ids, 'imgUrl': 'www.example.com' }
 
         r = requests.post(TEST_URL+'/deck', json=req_json)
 
         self.assertEqual(r.status_code, 200)
         self.assertTrue(len(r.text) != 0)
-
