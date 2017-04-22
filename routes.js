@@ -96,7 +96,7 @@ exports.update_card = function(req, res, next){
     if(req.body.description){
         update_card.description = req.body.description;
     }
-    card_model.update({_id:req.body.card} update_card, null, 
+    card_model.update({'_id':req.body.card}, update_card, null, 
             (err, num) => { if(err){console.log(err);} });
 }
 

@@ -104,7 +104,10 @@ app.get(
     }
 );
 
-app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(require('express-session')({ 
+    secret: app_secrets.sessions_secret,
+    resave: true, 
+    saveUninitialized: true }));
 
 /******************************************************************************
  *Routing
