@@ -99,7 +99,8 @@ exports.get_deck = function(req, res){
 }
 
 exports.create_deck = function(req, res){
-    var new_deck = new deck_model({title: req.body.title, desc: req.body.desc});
+    var new_deck = new deck_model({title: req.body.title, desc: req.body.desc, 
+        imgUrl: req.body.imgUrl});
     new_deck.save(function(error, deck, n){
         card_model.findByIdAndUpdate(
                 req.body.cards,
@@ -113,20 +114,20 @@ exports.create_deck = function(req, res){
     });
 }
 
-exports.update_deck = function(req, res){
+exports.add_cards_to_deck = function(req, res){
     deck_id = req.params.deck;
     new_cards = req.body.cards;
-    deck_model.find(_id : deck_id, (err, deck, n){
+    deck_model.find({'_id' : deck_id}, (err, deck, n) => {
         if(deck.length == 1){
             card_model.findByIdAndUpdate(
-                _id : {$in: new_cards}, 
+                {'_id': {$in: new_cards}},
                 {$push: {"decks": deck_id}},
                 {safe: true, upsert:true},
                 (err, _) => {
                     if(err){
                         console.log(err);
                     }
-                }
+                });
             }
         }
     );

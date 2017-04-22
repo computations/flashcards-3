@@ -2,6 +2,7 @@ var Schema = require('mongoose').Schema
 
 var deck_schema = Schema({
         title: String,
+        imgUrl: String,
         desc: String
 });
 
