@@ -112,8 +112,7 @@ class TestGetCalls(unittest.TestCase):
 
         update_card = {}
         update_card['media'] = c_r['media']
-        update_card['media'].append({'type': 'text', 'text':'Added media via\
-        update card'})
+        update_card['media'].append({'type': 'text', 'text':'Added media via update card'})
         update_card['title'] = 'An updated title'
         update_card['description'] = 'An updated description'
         u_r = requests.post(TEST_URL+'/card/'+card_id, json=update_card)
@@ -147,10 +146,22 @@ class TestGetCalls(unittest.TestCase):
         cards = requests.get(TEST_URL+"/card/").json()
         card_ids = [c['_id'] for c in cards]
 
-        req_json ={'title': 'Uploaded Deck', 'desc': 'An deck from the test '\
-                'program', 'cards': card_ids, 'imgUrl': 'www.example.com' }
+        req_json ={'title': 'Uploaded Deck', 'desc': 'An deck from the test program'
+                , 'cards': card_ids, 'imgUrl': 'www.example.com' }
 
         r = requests.post(TEST_URL+'/deck', json=req_json)
 
         self.assertEqual(r.status_code, 200)
         self.assertTrue(len(r.text) != 0)
+
+    def test_addCardToDeck(self):
+        deck_id= requests.get(TEST_URL+'/deck').json()[0]['_id']
+        pre_deck = requests.get(TEST_URL+'/deck/'+deck_id).json()
+        media_list = []
+        media_list.append({'type':'text', 'text':'deck card'})
+        media_list.append({'type':'text', 'text':'a card to add to a deck'})
+        card_id = requests.post(TEST_URL+'/card',
+                json={'media':media_list}).text.strip('"')
+
+        requests.post(TEST_URL+'/deck/'+deck_id, json={'cards':[card_id]})
+        post_deck = requests.get(TEST_URL+'/deck/'+deck_id).json()

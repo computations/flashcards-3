@@ -31,8 +31,11 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         $scope.modifymenu = modify;
         $scope.textmenu=true;
         $scope.videomenu=true;
-        if ($scope.editmenu==false && $scope.currentCard != undefined) {
+        if ($scope.editmenu==false) {
             $scope.toggleEdit();
+        }
+        if ($scope.deletemenu==false) {
+            $scope.deleteSide();
         }
 
     };
@@ -43,6 +46,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     };
 
     $scope.newSide = function(med, Url, tex){
+        $scope.resetMenu();
+        $scope.field="";
+
         $scope.cards.push({
             type: med, 
             url: Url,
@@ -144,8 +150,8 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
            html += "<input type='text' ng-model='cardDescription'><br>"
            html += "</div>"
            html += "<p>"
-           html += "<button ng-click='cancel()'>Cancel</button>"
-           html += "<button ng-click='confirm()'>Confirm</button>"
+           html += "<button style=\"margin-top:1em; margin-right:0.5em;\" class=\"btn btn-basic\" ng-click='confirm()'>Confirm</button>"
+           html += "<button style=\"margin-top:1em; margin-left:0.5em;\" class=\"btn btn-basic\" ng-click='cancel()'>Cancel</button>"
            html += "</p>"
 
        var card = $scope.cards;
@@ -298,15 +304,48 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                     "file to server: " + err)
             });
         }
-    }
+    };
+
+     $scope.deleteSide = function() {
+         var html = "<div>"
+         html += ""
+         html += "<h1>Delete this card?</h1>"
+         html += "<button style=\"margin-top:1em; margin-right:0.5em;\" class=\"btn btn-success\" ng-click='confirm()'>Yes</button>"
+         html += "<button style=\"margin-top:1em; margin-left:0.5em;\" class=\"btn btn-danger\" ng-click='cancel()'>No</button>"
+
+         var card = $scope.cards;
+         var index = $scope.cardCounter;
+         //Prompt the user to name the card
+         ngDialog.open({
+             template: html,
+             plain: true,
+             width: 400,
+             height: 200,
+             className: 'ngdialog-theme-plain',
+             controller:  ['$scope', function($scope){
+
+                 $scope.confirm = function(){
+                    card.splice(index, 1);
+                    ngDialog.close()
+                 }
+
+                 $scope.cancel = function(){
+                     ngDialog.close()
+                 }
+             }]
+
+         });
+         $scope.generateCard();
+         $scope.cards = card;
+     };
+    //call it on load
+    $scope.onload();
 
     $scope.question1 = " Is this working?"
     $scope.question2 = " Is this working?"
     $scope.question3 = " Is this working?"
     $scope.question4 = " Is this working?"
 
-    //call it on load
-    $scope.onload();
 
 }]);
 
