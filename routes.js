@@ -87,7 +87,7 @@ exports.update_card = function(req, res, next){
     if(req.body.media){
         update_card.media = [];
         for(var m of req.body.media){
-            media_list.push(new media_model(m));
+            update_card.media.push(new media_model(m));
         }
     }
     if(req.body.title){
@@ -96,8 +96,10 @@ exports.update_card = function(req, res, next){
     if(req.body.description){
         update_card.description = req.body.description;
     }
-    card_model.update({'_id':req.body.card}, update_card, null, 
-            (err, num) => { if(err){console.log(err);} });
+    console.log("updating card: " + req.params.id);
+    card_model.update({'_id':req.params.id}, update_card, {}, 
+            (err, num) => { console.log( num);
+                if(err){console.log(err);} res.send(); });
 }
 
 exports.get_decks = function(req, res, next){

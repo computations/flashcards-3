@@ -118,6 +118,7 @@ app.get('/', routes.index);
 
 app.get('/card/:id', routes.get_cards);
 app.post('/card', jsonparser, routes.create_card);
+app.post('/card/:id', jsonparser, routes.update_card);
 app.get('/card', routes.get_all_cards);
 
 app.get('/deck', routes.get_decks);
