@@ -45,6 +45,8 @@ card_model.remove({}, function(err){
         desc: "The example deck"
     });
 
+    example_deck.save()
+
     var example_card = new card_model({
         media : [example_media],
         decks : [example_deck]

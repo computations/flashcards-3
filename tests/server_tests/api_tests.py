@@ -147,7 +147,7 @@ class TestGetCalls(unittest.TestCase):
         card_ids = [c['_id'] for c in cards]
 
         req_json ={'title': 'Uploaded Deck', 'desc': 'An deck from the test program'
-                , 'cards': card_ids, 'imgUrl': 'www.example.com' }
+                ,'cards': card_ids, 'imgUrl': 'www.example.com' }
 
         r = requests.post(TEST_URL+'/deck', json=req_json)
 
@@ -165,3 +165,6 @@ class TestGetCalls(unittest.TestCase):
 
         requests.post(TEST_URL+'/deck/'+deck_id, json={'cards':[card_id]})
         post_deck = requests.get(TEST_URL+'/deck/'+deck_id).json()
+
+        self.assertTrue(type(post_deck) is list)
+        self.assertEqual(len(post_deck), len(pre_deck)+1)
