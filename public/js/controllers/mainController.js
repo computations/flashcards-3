@@ -7,8 +7,8 @@ app.controller('mainController', ['$scope', '$sce', '$http', 'isLegitCard',
  	}
 
    	$scope.toCard = function(cardID){
-   		//send card clicked data to flashcard controller
-   		isLegitCard.sendCard(cardID); 
+   		//send deck id to flashcard controller
+   		isLegitCard.sendDeck(cardID); 
 
    	}; 
 
