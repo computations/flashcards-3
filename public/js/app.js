@@ -137,23 +137,23 @@ app.directive('loadCards', function ($http, $compile, isLegitCard) {
 
             var div = ""
             //Loop through the cards in the deck
-            for(var i=0; i<success.data.media.length; i++){
+            for(var i=0; i<success.data[0].media.length; i++){
                 var html = '<div class="col-sm-4 col-lg-4 col-md-4">';
                 html += '<div class="thumbnail">';
 
                 //find an image side on the card to view 
-                if(success.data.media[i].url){
-                    html += '<img src="' + success.data.media[i].url + '" alt="http://placehold.it/320x150">';
+                if(success.data[0].media[i].url){
+                    html += '<img src="' + success.data[0].media[i].url + '" alt="http://placehold.it/320x150">';
                 }
                 else{
                     //replace image with default
                     html += '<img src="http://placehold.it/320x150" alt="">'; 
                 }
-                
+
                 html += '<div class="caption">';
-                html += '<h4><a href="#!card" ng-click="toCard(&quot;' + success.data.media[i]._id.toString() + '&quot;)">' + success.data.media[i].title + '</a>'; 
+                html += '<h4><a href="#!card" ng-click="toCard(&quot;' + success.data[0].media[i]._id.toString() + '&quot;)">' + success.data.media[i].title + '</a>'; 
                 html += '</h4>'; 
-                html += '<p>' + success.data.media[i].description + '</p>'; 
+                html += '<p>' + success.data[0].media[i].description + '</p>'; 
                 html += '</div>'; 
                 html += '</div>'; 
                 html += '</div>'; 
@@ -186,8 +186,6 @@ app.directive('loadDecks', function ($http, $compile) {
             method: 'GET',
             url: 'http://localhost:3000/deck'
         }).then(function(success){
-
-            Logger.log(success.data)
 
             var div = ""
             for(var i=0; i<success.data.length; i++){
@@ -225,5 +223,20 @@ app.directive('loadDecks', function ($http, $compile) {
 
       }
     }
-  })
+});
+
+//http://stackoverflow.com/questions/27549134/angularjs-ng-src-condition-if-not-found-via-url
+app.directive('errSrc', function () {
+  return {
+        link: function(scope, element, attrs){
+            element.bind('error', function(){
+                if(attrs.src!=attrs.errSrc){
+                    attrs.$set('src', attrs.errSrc)
+                }
+            })
+        }
+    }
+});
+
+
 
