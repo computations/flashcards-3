@@ -1,14 +1,7 @@
 //flashcard.js
 
-app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog',  function ($scope, Upload, $http, ngDialog) {
-
-    //We came to this page, the card is a new one
-    if($scope.blankCard){
-
-    }
-    else{
-
-    }
+app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', 'isLegitCard',
+ function ($scope, Upload, $http, ngDialog, isLegitCard) {
 
     $scope.addmenu = true;
     $scope.deletemenu = true;
@@ -17,7 +10,8 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog',  
     $scope.textmenu = true;
     $scope.videomenu = true;
     $scope.cards = [];
-    $scope.currentCard = $scope.cards[0];
+    $scope.currentCard; 
+    console.log($scope.currentCard) 
     $scope.cardCounter = 0;
     $scope.isCardRevealed = true;
 
@@ -46,7 +40,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog',  
         }
         
         $scope.cards.push({
-            media: med, 
+            type: med, 
             url: Url,
             text: tex
         }) 
@@ -65,15 +59,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog',  
                 file: file
 
             }).success(function(response,status){
-               
-               if(response.media_type=="text"){
-                    $scope.newSide(response.media_type, "", response.text)
-               }
-               else{
-                    $scope.newSide(response.media_type, urlPrefix + response.url)
-               }
-                
 
+                $scope.newSide(response.media_type, urlPrefix + response.url, "")
+                
             }).error(function(err){
                 //error
                 Logger.log("Error occurred while sending " +
@@ -117,11 +105,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog',  
                             data:{'media': card} //An array of the card's sides, 
                                                     //each side is json
                         }).then(function(res){
-                            console.log(res)
-                            console.log(res.data)
 
                         }, function(error){
-                            console.log(error)
+                            Logger.log(error)
                         });
 
                         //close the dialog box
@@ -153,9 +139,56 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog',  
         else{//loop it
             saveCounter = 0;
         }
-
+        console.log($scope.cards)
         $scope.cardCounter = saveCounter;
         $scope.currentCard = $scope.cards[$scope.cardCounter];
     }
+
+    $scope.transformServerObjToCard = function(serverCards){
+        for(i=0; i<serverCards.media.length; ++i){
+            //type, url, text
+            $scope.newSide(serverCards.media[i].type, serverCards.media[i].url,
+                serverCards.media[i].text)
+        }
+    }
+
+    $scope.getCard = function(){
+        var cardID = isLegitCard.getCard()
+        if(cardID == {}){
+            //nope, new card
+        }
+        else{
+            //Get the card data from the server
+            $http({
+                method: 'GET',
+                url: 'http://localhost:3000/card/' + cardID
+            }).then(function(success){
+                $scope.transformServerObjToCard(success.data)
+            }, function(error){
+                    Logger.log(error)
+            });
+        }
+
+    }
+
+    //Do these on load
+    $scope.onload = function(){
+        //see if it is a card that is already created
+        $scope.getCard();  
+
+        //add delay for server card data to catch up
+        
+
+        $scope.currentCard = $scope.cards[0];
+        console.log($scope.currentCard);
+        $scope.currentCard = "test";
+        console.log($scope.cards)
+        console.log($scope.currentCard)
+    }
+
+    //call it on load
+    $scope.onload(); 
+    
+
 }]);
 
