@@ -7,6 +7,7 @@ var bodyparser = require('body-parser');
 var fs = require('fs');
 var passport = require('passport');
 var google_strat = require('passport-google-oauth20').Strategy;
+var express_session = require('express-session');
 
 var uri  = 'mongodb://localhost/flashcards';
 global.db = mongoose.createConnection(uri);
@@ -17,6 +18,13 @@ var deck_model = require('./models/modelDeck')
 var user_model = require('./models/modelUser')
 var app = express();
 var routes = require('./routes');
+var app_secrets = require('./secrets');
+
+/******************************************************************************
+ * Some useful const values. These need to be changed when deployed
+ */
+const http__url = "http://localhost:3000" 
+const https_url = "https://localhost:3443" 
 
 /*
  * While we are testing, clear the database everytime the app starts
@@ -44,6 +52,7 @@ card_model.remove({}, function(err){
 
     example_card.save();
 });
+deck_model.remove({}, () => {console.log("decks cleared");});
 
 var storage = multer.diskStorage({
     destination: function(req, file, cb){
@@ -58,10 +67,48 @@ var upload = multer({storage: storage});
 
 var jsonparser = bodyparser.json();
 
-/*
+/******************************************************************************
  * User auth stuff
  */
+passport.use(new google_strat({
+        clientID: app_secrets.client_id,
+        clientSecret: app_secrets.client_secret,
+        callbackURL: https_url+'/auth/google/callback'
+    },
+    (accessToken, refreshToken, profile, cb) => {
+        user_model.upsert_user(profile.id, (err, user) => {
+            if(err){console.log(err);}
+            return cb(err, user);
+        });
+    }
+));
 
+passport.serializeUser((user, cb) => {
+    cb(null, user);
+});
+
+passport.deserializeUser((obj, cb) => {
+    cb(null, obj);
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/auth/google', passport.authenticate('google', {scope: ['profile']}));
+app.get(
+    '/auth/google/callback',
+    passport.authenticate('google', {failureRedirect: '/'}),
+    (req, res) => {
+        console.log("auth callback");
+        res.redirect('/');
+    }
+);
+
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+
+/******************************************************************************
+ *Routing
+ */
 app.use(express.static('public'));
 app.use('/static',express.static('static'));
 app.get('/', routes.index);

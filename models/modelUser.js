@@ -6,10 +6,20 @@ var history_schema = Schema({
 });
 
 var user_schema = Schema({
-    username: {type:String, required: true, unique:true},
-    pw_hash: {type: String, required: true},
-    pw_salt: {type: String, required: true},
+    user_id: {type:String, required: true, unique:true},
     card_history: [history_schema]
 });
 
-module.exports = db.model('users', user_schema);
+var user = db.model('users',user_schema);
+
+
+module.exports = user
+
+module.exports.upsert_user = (oauth_id, cb) => {
+    var query = {'user_id' : oauth_id};
+    user.findOneAndUpdate(query, query, {upsert: true}, (err, doc) => {
+        console.log("user_id:"+ query.oauth_id);
+        if(err){console.log(err);}
+        cb(err, query.oauth_id);
+    });
+};
