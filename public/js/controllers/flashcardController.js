@@ -9,7 +9,6 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.modifymenu = true;
     $scope.textmenu = true;
     $scope.videomenu = true;
-    $scope.savecard = false;
     $scope.textfield ="";
     $scope.cards = [];
     $scope.currentCard=$scope.cards[0];
@@ -32,7 +31,6 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         $scope.modifymenu = modify;
         $scope.textmenu=true;
         $scope.videomenu=true;
-        $scope.savecard = true;
         if ($scope.editmenu==false && $scope.currentCard != undefined) {
             $scope.toggleEdit();
         }
@@ -42,12 +40,13 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.toggleAddMenu = function(text, video) {
         $scope.textmenu=text;
         $scope.videomenu=video;
-        $scope.savecard = true;
     };
 
     $scope.newSide = function(med, Url, tex){
-        $scope.field="";
-        $scope.resetMenu();
+        if(tex=="Enter text here"){
+            tex=""
+        }
+
         $scope.cards.push({
             type: med, 
             url: Url,
@@ -81,6 +80,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
 
 
     $scope.addNewCard = function(){
+        $scope.resetMenu();
         var deckID = isLegitCard.getDeck()
         if(deckID==0){
             //A new Deck obj to be created
@@ -219,35 +219,36 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         }
     };
 
-    $scope.getCard = function(){
+    $scope.getCard = function() {
         var cardID = isLegitCard.getCard();
-        if(cardID == {}){
-        var cardID = isLegitCard.getCard()
-        if(cardID == {} || cardID == 0 || cardID == undefined){
-            //nope, new card
-            return;
-        }
-        else{
-            //Get the card data from the server
-            $http({
-                method: 'GET',
-                url: 'http://localhost:3000/card/' + cardID
-            }).then(function(success){
-                $scope.transformServerObjToCard(success.data)
-            }, function(error){
+        if (cardID == {}) {
+            var cardID = isLegitCard.getCard()
+            if (cardID == {} || cardID == 0 || cardID == undefined) {
+                //nope, new card
+                return;
+            }
+            else {
+                //Get the card data from the server
+                $http({
+                    method: 'GET',
+                    url: 'http://localhost:3000/card/' + cardID
+                }).then(function (success) {
+                    $scope.transformServerObjToCard(success.data)
+                }, function (error) {
                     Logger.log(error)
-            });
-        }
+                });
+            }
 
+        }
     };
 
     //Do these on load
     $scope.onload = function(){
         //see if it is a card that is already created
-        $scope.getCard();  
+        $scope.getCard();
 
         //add delay for server card data to catch up
-        
+
 
         $scope.currentCard = $scope.cards[0];
         // console.log($scope.currentCard);
@@ -303,8 +304,8 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     }
 
     //call it on load
-    $scope.onload(); 
-    
+    $scope.onload();
+
 
 }]);
 
