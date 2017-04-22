@@ -50,7 +50,7 @@ app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $
             //Usage: Check API.md for URL needed
         $http({
             method: 'GET',
-            url: 'http://localhost:3000/cards/'
+            url: 'http://localhost:3000/card/'
         }).then(function(success){
             console.log(success)
             console.log(success.data[0].media[0].url)
