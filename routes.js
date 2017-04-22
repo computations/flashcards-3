@@ -3,6 +3,7 @@ var media_model = require('./models/modelMedia');
 var deck_model = require('./models/modelDeck');
 var crypto = require('crypto');
 var fs = require('fs');
+var mongoose = require('mongoose');
 
 exports.get_all_cards = function(req, res, next){
     console.log("getting all cards");
@@ -113,11 +114,11 @@ exports.get_decks = function(req, res, next){
 
 exports.get_deck = function(req, res){
     deck_id = req.params.deck 
-    card_model.find({'decks._id': deck_id}, function(err, cards){
+    card_model.find({'decks._id': deck_id}, function(err, deck){
         if(err){
             console.log(err);
         }
-        res.send(cards);
+        res.send(deck);
     });
 }
 
@@ -141,17 +142,27 @@ exports.add_cards_to_deck = function(req, res){
     deck_id = req.params.deck;
     new_cards = req.body.cards;
     deck_model.find({'_id' : deck_id}, (err, deck, n) => {
-        if(deck.length == 1){
-            card_model.findByIdAndUpdate(
-                {'_id': {$in: new_cards}},
-                {$push: {"decks": deck_id}},
-                {safe: true, upsert:true},
-                (err, _) => {
-                    if(err){
-                        console.log(err);
-                    }
-                });
-            }
+        if(err){
+            console.log(err);
         }
-    );
+        if(deck.length == 1){
+            new_cards.forEach( id => {
+                console.log("add card to deck card id: "+ id);
+                card_model.update(
+                    {_id: id},
+                    {$push: {decks: deck}},
+                    {safe: false, upsert:true},
+                    (err, num) => {
+                        if(err){
+                            console.log(err);
+                        }
+                    }
+                );
+            });
+            res.send();
+        }
+        else{
+            res.send();
+        }
+    });
 }
