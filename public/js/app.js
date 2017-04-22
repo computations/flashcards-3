@@ -32,9 +32,9 @@ app.config(function($routeProvider) {
             controller : 'aboutController'
         })
         // route for the contact page
-        .when('/contact', {
-            templateUrl : '../html/pages/contact.html',
-            controller  : 'contactController'
+        .when('/test', {
+            templateUrl : '../html/pages/test.html',
+            controller  : 'testController'
         })
         .when('/signin', {
             templateUrl : '../html/pages/admin.html',
