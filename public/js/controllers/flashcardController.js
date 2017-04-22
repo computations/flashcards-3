@@ -10,7 +10,8 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.textmenu = true;
     $scope.videomenu = true;
     $scope.cards = [];
-    $scope.currentCard;
+    $scope.currentCard = "";
+    $scope.currentCard.url = 'about:blank'
     $scope.cardCounter = 0;
     $scope.isCardRevealed = true;
 
@@ -124,7 +125,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         }
         else{
             //Deck is already created, append card 
-            
+
            //Dialog Box HTML
            var html = "<div>"
            html += ""

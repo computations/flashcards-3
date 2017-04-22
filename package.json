@@ -11,9 +11,9 @@
     "mongoose": "^4.9.2",
     "multer": "^1.2.1",
     "ng-dialog": "^1.0.1",
-    "passport":"",
-    "passport-google-oauth20":"^1.0.0",
-    "ng-file-upload": ""
+    "ng-file-upload": "",
+    "passport": "^0.3.2",
+    "passport-google-oauth20": "^1.0.0"
   },
   "scripts": {
     "prestart": "mkdir -p uploads; mongod --config /usr/local/etc/mongod.conf &",
