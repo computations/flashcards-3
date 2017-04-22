@@ -124,6 +124,7 @@ app.get('/card', routes.get_all_cards);
 app.get('/deck', routes.get_decks);
 app.get('/deck/:deck', routes.get_deck);
 app.post('/deck', jsonparser, routes.create_deck);
+app.post('/deck/:deck', jsonparser, routes.add_cards_to_deck);
 
 app.post('/upload', upload.single('file'), routes.upload_file);
 
