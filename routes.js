@@ -36,9 +36,16 @@ exports.upload_file = function(req,res){
     var hash = crypto.createHash('sha256')
     var hashed_file = hash.update(fs.readFileSync(req.file.path)).digest('hex');
     var filename=new_dir + hashed_file;
-    fs.rename(req.file.path, filename, function(){
-        res.send({'url': filename, 'media_type': file_type});
-    });
+    if(!fs.existsSync(filename)){
+        fs.rename(req.file.path, filename, function(){
+            res.send({'url': filename, 'media_type': file_type});
+        });
+    }
+    else{
+        fs.unlink(req.file.path, () => {
+            res.send({'url': filename, 'media_type': file_type});
+        });
+    }
 };
  
 /*
