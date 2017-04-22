@@ -24,7 +24,8 @@ app.config(function($routeProvider) {
         // route for the cards page
         .when('/card', {
             templateUrl : '../html/pages/card.html',
-            controller  : 'flashcardController'
+            controller  : 'flashcardController',
+            resolve     : 'flashcardController.resolve'
         })
         // route for the abouts page
         .when('/about', {
@@ -224,11 +225,15 @@ app.directive('loadDecks', function ($http, $compile) {
     }
 });
 
-
-app.directive('urlError', function () {
+//http://stackoverflow.com/questions/27549134/angularjs-ng-src-condition-if-not-found-via-url
+app.directive('errSrc', function () {
   return {
         link: function(scope, element, attrs){
-            
+            element.bind('error', function(){
+                if(attrs.src!=attrs.errSrc){
+                    attrs.$set('src', attrs.errSrc)
+                }
+            })
         }
     }
 });

@@ -9,9 +9,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.modifymenu = true;
     $scope.textmenu = true;
     $scope.videomenu = true;
+    $scope.textfield ="";
     $scope.cards = [];
-    $scope.currentCard = "";
-    $scope.currentCard.url = 'about:blank'
+    $scope.currentCard = $scope.cards[0];
     $scope.cardCounter = 0;
     $scope.isCardRevealed = true;
 
@@ -22,11 +22,19 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
 
     $scope.toggleMenu = function (add, del, edit, modify) {
         $scope.addmenu = add;
-        $scope.deletemenu = del;
-        $scope.editmenu = edit;
+
+        if ($scope.currentCard != undefined) {
+            $scope.deletemenu = del;
+            $scope.editmenu = edit;
+        }
+
         $scope.modifymenu = modify;
         $scope.textmenu=true;
         $scope.videomenu=true;
+        if ($scope.editmenu==false && $scope.currentCard != undefined) {
+            $scope.toggleEdit();
+        }
+
     };
 
     $scope.toggleAddMenu = function(text, video) {
@@ -68,6 +76,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
 
 
     $scope.addNewCard = function(){
+        $scope.resetMenu();
         var deckID = isLegitCard.getDeck()
         if(deckID==0){
             //A new Deck obj to be created
@@ -84,16 +93,16 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
            html += "<input type='text' ng-model='deckDescription'><br>"
            html += "</div>"
            html += "<p>"
-           html += "<button ng-click='cancel()'>Cancel</button>"
-           html += "<button ng-click='confirm()'>Confirm</button>"
+           html += "<button style=\"margin-top:1em; margin-right:0.5em;\" class=\"btn btn-basic\" ng-click='confirm()'>Confirm</button>"
+           html += "<button style=\"margin-top:1em; margin-left:0.5em;\" class=\"btn btn-basic\" ng-click='cancel()'>Cancel</button>"
            html += "</p>"
 
-           var card = $scope.cards 
+           var card = $scope.cards
 
            //Prompt the user to name the card
            ngDialog.open({
                     template: html,
-                    plain: true, 
+                    plain: true,
                     width: 400,
                     height: 400,
                     className: 'ngdialog-theme-plain',
@@ -105,7 +114,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                             $http({
                                 method: 'POST',
                                 url: 'http://localhost:3000/card/',
-                                data:{'media': card} //An array of the card's sides, 
+                                data:{'media': card} //An array of the card's sides,
                                                         //each side is json
                             }).then(function(res){
 
@@ -121,7 +130,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                             ngDialog.close()
                         }
                     }]
-            }); 
+            });
         }
         else{
             //Deck is already created, append card 
@@ -139,12 +148,12 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
            html += "<button ng-click='confirm()'>Confirm</button>"
            html += "</p>"
 
-           var card = $scope.cards 
+       var card = $scope.cards;
 
            //Prompt the user to name the card
            ngDialog.open({
                     template: html,
-                    plain: true, 
+                    plain: true,
                     width: 400,
                     height: 400,
                     className: 'ngdialog-theme-plain',
@@ -155,7 +164,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                             $http({
                                 method: 'POST',
                                 url: 'http://localhost:3000/card/',
-                                data:{'media': card} //An array of the card's sides, 
+                                data:{'media': card} //An array of the card's sides,
                                                         //each side is json
                             }).then(function(res){
 
@@ -171,8 +180,8 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                             ngDialog.close()
                         }
                     }]
-     
-            }); 
+
+            });
         }
 
     };
@@ -196,7 +205,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         }
         $scope.cardCounter = saveCounter;
         $scope.currentCard = $scope.cards[$scope.cardCounter];
-    }
+    };
 
     $scope.transformServerObjToCard = function(serverCards){
         for(var i=0; i<serverCards.media.length; ++i){
@@ -204,36 +213,100 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
             $scope.newSide(serverCards.media[i].type, serverCards.media[i].url,
                 serverCards.media[i].text)
         }
-    }
+    };
 
-    $scope.getCard = function(){
-        var cardID = isLegitCard.getCard()
-        if(cardID == {} || cardID == 0 || cardID == undefined){
-            //nope, new card
-            return; 
-        }
-        else{
-            //Get the card data from the server
-            $http({
-                method: 'GET',
-                url: 'http://localhost:3000/card/' + cardID
-            }).then(function(success){
-                $scope.transformServerObjToCard(success.data)
-            }, function(error){
+    $scope.getCard = function() {
+        var cardID = isLegitCard.getCard();
+        if (cardID == {}) {
+            var cardID = isLegitCard.getCard()
+            if (cardID == {} || cardID == 0 || cardID == undefined) {
+                //nope, new card
+                return;
+            }
+            else {
+                //Get the card data from the server
+                $http({
+                    method: 'GET',
+                    url: 'http://localhost:3000/card/' + cardID
+                }).then(function (success) {
+                    $scope.transformServerObjToCard(success.data)
+                }, function (error) {
                     Logger.log(error)
-            });
-        }
+                });
+            }
 
-    }
+        }
+    };
 
     //Do these on load
     $scope.onload = function(){
         //see if it is a card that is already created
-        $scope.getCard();  
+        $scope.getCard();
+
+        //Pop off first element (it was there for error loading messages 404)
+        if($scope.cards.length>0){
+            $scope.cards.pop()
+        }
+        $scope.currentCard = $scope.cards[0];
+        // console.log($scope.currentCard);
+        // $scope.currentCard = "test";
+        // console.log($scope.cards);
+        // console.log($scope.currentCard);
+    };
+
+    $scope.resetMenu = function() {
+        $scope.addmenu = true;
+        $scope.deletemenu = true;
+        $scope.editmenu = true;
+        $scope.modifymenu = true;
+        $scope.textmenu=true;
+        $scope.videomenu=true;
+    };
+
+    $scope.toggleEdit = function() {
+        if ($scope.currentCard.type == "text") {
+            $scope.textfield = $scope.currentCard.text;
+            $scope.textmenu = false;
+        } else {
+            $scope.videomenu = false;
+        }
+    };
+
+    $scope.updateText = function(tex) {
+        $scope.currentCard.text=tex;
+        $scope.resetMenu();
+    };
+
+    $scope.updateVideo = function(file, errFiles) {
+        if(file){
+            //upload user file to server using ng-file-upload
+            var urlPrefix = "http://localhost:3000/";
+
+            Upload.upload({
+                url: 'http://localhost:3000/upload',
+                method: 'POST',
+                file: file
+
+            }).success(function(response,status){
+                $scope.resetMenu();
+                $scope.currentCard.type = response.media_type;
+                $scope.currentCard.url=urlPrefix + response.url;
+
+            }).error(function(err){
+                //error
+                Logger.log("Error occurred while sending " +
+                    "file to server: " + err)
+            });
+        }
     }
 
+    $scope.question1 = " Is this working?"
+    $scope.question2 = " Is this working?"
+    $scope.question3 = " Is this working?"
+    $scope.question4 = " Is this working?"
+
     //call it on load
-    $scope.onload(); 
+    $scope.onload();
 
 }]);
 
