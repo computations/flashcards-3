@@ -1,7 +1,5 @@
 //flashcard.js
 
-
-
 app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', 'isLegitCard',
  function ($scope, Upload, $http, ngDialog, isLegitCard) {
 
@@ -61,9 +59,8 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.uploadFiles = function(file, errFiles){
 
         if(file){
-            console.log(file);
             //upload user file to server using ng-file-upload
-            var urlPrefix = "http://localhost:3000/";
+            var urlPrefix = "http://localhost:3000/"
 
             Upload.upload({
                 url: 'http://localhost:3000/upload',
@@ -84,56 +81,113 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
 
 
     $scope.addNewCard = function(){
+        var deckID = isLegitCard.getDeck()
+        if(deckID==0){
+            //A new Deck obj to be created
+            //Dialog Box HTML
+           var html = "<div>"
+           html += ""
+           html += "<h3>Name of Card</h3>"
+           html += "<input type='text' ng-model='cardTitle'><br>"
+           html += "<h4>Short Description of Card</h4>"
+           html += "<input type='text' ng-model='cardDescription'><br>"
+           html += "<h3>Name of New Deck</h3>"
+           html += "<input type='text' ng-model='deckTitle'><br>"
+           html += "<h4>Short Description of Deck</h4>"
+           html += "<input type='text' ng-model='deckDescription'><br>"
+           html += "</div>"
+           html += "<p>"
+           html += "<button style=\"margin-top:1em; margin-right:0.5em;\" class=\"btn btn-basic\" ng-click='confirm()'>Confirm</button>"
+           html += "<button style=\"margin-top:1em; margin-left:0.5em;\" class=\"btn btn-basic\" ng-click='cancel()'>Cancel</button>"
+           html += "</p>"
 
-       //Dialog Box HTML
-       var html = "<div>";
-       html += "";
-       html += "<h1>Name of Card</h1>";
-       html += "<input type='text' ng-model='cardTitle'><br>";
-       html += "<h2>Short Description of Card</h2>";
-       html += "<input type='text' ng-model='cardDescription'><br>";
-       html += "</div>";
-       html += "<p>";
-       html += "<button style=\"margin-top:1em; margin-right:0.5em;\" class=\"btn btn-basic\" ng-click='confirm()'>Confirm</button>";
-       html += "<button style=\"margin-top:1em; margin-right:0.5em;\" class=\"btn btn-basic\" ng-click='cancel()'>Cancel</button>";
-       html += "</p>";
+           var card = $scope.cards
+
+           //Prompt the user to name the card
+           ngDialog.open({
+                    template: html,
+                    plain: true,
+                    width: 400,
+                    height: 400,
+                    className: 'ngdialog-theme-plain',
+                    controller:  ['$scope', function($scope){
+
+                        //Make a new deck with card in it
+                        $scope.confirm = function(){
+                            //Send the card with the title and description
+                            $http({
+                                method: 'POST',
+                                url: 'http://localhost:3000/card/',
+                                data:{'media': card} //An array of the card's sides,
+                                                        //each side is json
+                            }).then(function(res){
+
+                            }, function(error){
+                                Logger.log(error)
+                            });
+
+                            //close the dialog box
+                            ngDialog.close()
+                        }
+
+                        $scope.cancel = function(){
+                            ngDialog.close()
+                        }
+                    }]
+            });
+        }
+        else{
+            //Deck is already created, append card
+
+           //Dialog Box HTML
+           var html = "<div>"
+           html += ""
+           html += "<h1>Name of Card</h1>"
+           html += "<input type='text' ng-model='cardTitle'><br>"
+           html += "<h2>Short Description of Card</h2>"
+           html += "<input type='text' ng-model='cardDescription'><br>"
+           html += "</div>"
+           html += "<p>"
+           html += "<button ng-click='cancel()'>Cancel</button>"
+           html += "<button ng-click='confirm()'>Confirm</button>"
+           html += "</p>"
 
        var card = $scope.cards;
 
-       //Prompt the user to name the card
-       ngDialog.open({
-                template: html,
-                plain: true, //Uncomment this line to use variable text instead of file
-                width: 400,
-                height: 400,
-                className: 'ngdialog-theme-plain',
-                controller:  ['$scope', function($scope){
+           //Prompt the user to name the card
+           ngDialog.open({
+                    template: html,
+                    plain: true,
+                    width: 400,
+                    height: 400,
+                    className: 'ngdialog-theme-plain',
+                    controller:  ['$scope', function($scope){
 
-                    $scope.cancel = function(){
-                        ngDialog.close()
-                    };
+                        $scope.confirm = function(){
+                            //Send the card with the title and description
+                            $http({
+                                method: 'POST',
+                                url: 'http://localhost:3000/card/',
+                                data:{'media': card} //An array of the card's sides,
+                                                        //each side is json
+                            }).then(function(res){
 
-                    $scope.confirm = function(){
-                        //Send the card with the title and description
-                        $http({
-                            method: 'POST',
-                            url: 'http://localhost:3000/card/',
-                            data:{'media': card} //An array of the card's sides, 
-                                                    //each side is json
-                        }).then(function(res){
+                            }, function(error){
+                                Logger.log(error)
+                            });
 
-                        }, function(error){
-                            Logger.log(error)
-                        });
+                            //close the dialog box
+                            ngDialog.close()
+                        }
 
-                        //close the dialog box
-                        ngDialog.close()
-                    };
+                        $scope.cancel = function(){
+                            ngDialog.close()
+                        }
+                    }]
 
+            });
+        }
 
-                }]
- 
-        }); 
     };
 
     $scope.flipCard = function() {
@@ -153,13 +207,12 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         else{//loop it
             saveCounter = 0;
         }
-        // console.log($scope.cards);
         $scope.cardCounter = saveCounter;
         $scope.currentCard = $scope.cards[$scope.cardCounter];
     };
 
     $scope.transformServerObjToCard = function(serverCards){
-        for(i=0; i<serverCards.media.length; ++i){
+        for(var i=0; i<serverCards.media.length; ++i){
             //type, url, text
             $scope.newSide(serverCards.media[i].type, serverCards.media[i].url,
                 serverCards.media[i].text)
@@ -169,7 +222,10 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.getCard = function(){
         var cardID = isLegitCard.getCard();
         if(cardID == {}){
+        var cardID = isLegitCard.getCard()
+        if(cardID == {} || cardID == 0 || cardID == undefined){
             //nope, new card
+            return;
         }
         else{
             //Get the card data from the server
@@ -246,8 +302,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         }
     }
 
-
     //call it on load
     $scope.onload(); 
+    
 
 }]);
+

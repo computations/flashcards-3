@@ -157,3 +157,4 @@ ENV/
 
 static/*
 tests/server_tests/test_content/
+secrets.js

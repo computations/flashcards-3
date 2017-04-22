@@ -66,9 +66,12 @@ exports.create_card = function(req, res, next){
     for(var m of req.body.media){
         media_list.push( new media_model(m));
     }
+    new_title=req.body.title;
+    new_desc = req.body.description;
     console.log("requested media list");
     console.log(media_list)
-    var new_card = new card_model({media:media_list});
+    var new_card = new card_model({media:media_list, title:new_title, 
+        description:new_desc});
     new_card.save((err) =>{
         if(err){
             console.log(err);
@@ -78,6 +81,26 @@ exports.create_card = function(req, res, next){
     res.send(new_card._id);
     next();
 };
+
+exports.update_card = function(req, res, next){
+    var update_card = {}
+    if(req.body.media){
+        update_card.media = [];
+        for(var m of req.body.media){
+            update_card.media.push(new media_model(m));
+        }
+    }
+    if(req.body.title){
+        update_card.title=req.body.title;
+    }
+    if(req.body.description){
+        update_card.description = req.body.description;
+    }
+    console.log("updating card: " + req.params.id);
+    card_model.update({'_id':req.params.id}, update_card, {}, 
+            (err, num) => { console.log( num);
+                if(err){console.log(err);} res.send(); });
+}
 
 exports.get_decks = function(req, res, next){
     card_model.find().distinct('decks', function(err, cols){
@@ -90,7 +113,7 @@ exports.get_decks = function(req, res, next){
 
 exports.get_deck = function(req, res){
     deck_id = req.params.deck 
-    card_model.findOne({'decks._id': deck_id}, function(err, cards){
+    card_model.find({'decks._id': deck_id}, function(err, cards){
         if(err){
             console.log(err);
         }
@@ -99,7 +122,8 @@ exports.get_deck = function(req, res){
 }
 
 exports.create_deck = function(req, res){
-    var new_deck = new deck_model({title: req.body.title, desc: req.body.desc});
+    var new_deck = new deck_model({title: req.body.title, desc: req.body.desc, 
+        imgUrl: req.body.imgUrl});
     new_deck.save(function(error, deck, n){
         card_model.findByIdAndUpdate(
                 req.body.cards,
@@ -111,4 +135,23 @@ exports.create_deck = function(req, res){
                 }
         );
     });
+}
+
+exports.add_cards_to_deck = function(req, res){
+    deck_id = req.params.deck;
+    new_cards = req.body.cards;
+    deck_model.find({'_id' : deck_id}, (err, deck, n) => {
+        if(deck.length == 1){
+            card_model.findByIdAndUpdate(
+                {'_id': {$in: new_cards}},
+                {$push: {"decks": deck_id}},
+                {safe: true, upsert:true},
+                (err, _) => {
+                    if(err){
+                        console.log(err);
+                    }
+                });
+            }
+        }
+    );
 }
