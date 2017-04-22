@@ -66,9 +66,12 @@ exports.create_card = function(req, res, next){
     for(var m of req.body.media){
         media_list.push( new media_model(m));
     }
+    new_title=req.body.title;
+    new_desc = req.body.description;
     console.log("requested media list");
     console.log(media_list)
-    var new_card = new card_model({media:media_list});
+    var new_card = new card_model({media:media_list, title:new_title, 
+        description:new_desc});
     new_card.save((err) =>{
         if(err){
             console.log(err);
@@ -78,6 +81,24 @@ exports.create_card = function(req, res, next){
     res.send(new_card._id);
     next();
 };
+
+exports.update_card = function(req, res, next){
+    var update_card = {}
+    if(req.body.media){
+        update_card.media = [];
+        for(var m of req.body.media){
+            media_list.push(new media_model(m));
+        }
+    }
+    if(req.body.title){
+        update_card.title=req.body.title;
+    }
+    if(req.body.description){
+        update_card.description = req.body.description;
+    }
+    card_model.update({_id:req.body.card} update_card, null, 
+            (err, num) => { if(err){console.log(err);} });
+}
 
 exports.get_decks = function(req, res, next){
     card_model.find().distinct('decks', function(err, cols){
