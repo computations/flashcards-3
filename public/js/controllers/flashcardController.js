@@ -1,5 +1,7 @@
 //flashcard.js
 
+
+
 app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', 'isLegitCard',
  function ($scope, Upload, $http, ngDialog, isLegitCard) {
 
@@ -9,9 +11,10 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.modifymenu = true;
     $scope.textmenu = true;
     $scope.videomenu = true;
+    $scope.savecard = false;
+    $scope.textfield ="";
     $scope.cards = [];
-    $scope.currentCard; 
-    console.log($scope.currentCard) 
+    $scope.currentCard=$scope.cards[0];
     $scope.cardCounter = 0;
     $scope.isCardRevealed = true;
 
@@ -22,23 +25,31 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
 
     $scope.toggleMenu = function (add, del, edit, modify) {
         $scope.addmenu = add;
-        $scope.deletemenu = del;
-        $scope.editmenu = edit;
+
+        if ($scope.currentCard != undefined) {
+            $scope.deletemenu = del;
+            $scope.editmenu = edit;
+        }
+
         $scope.modifymenu = modify;
         $scope.textmenu=true;
         $scope.videomenu=true;
+        $scope.savecard = true;
+        if ($scope.editmenu==false && $scope.currentCard != undefined) {
+            $scope.toggleEdit();
+        }
+
     };
 
     $scope.toggleAddMenu = function(text, video) {
         $scope.textmenu=text;
         $scope.videomenu=video;
+        $scope.savecard = true;
     };
 
     $scope.newSide = function(med, Url, tex){
-        if(tex=="Enter text here"){
-            tex=""
-        }
-        
+        $scope.field="";
+        $scope.resetMenu();
         $scope.cards.push({
             type: med, 
             url: Url,
@@ -50,8 +61,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.uploadFiles = function(file, errFiles){
 
         if(file){
+            console.log(file);
             //upload user file to server using ng-file-upload
-            var urlPrefix = "http://localhost:3000/"
+            var urlPrefix = "http://localhost:3000/";
 
             Upload.upload({
                 url: 'http://localhost:3000/upload',
@@ -74,19 +86,19 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.addNewCard = function(){
 
        //Dialog Box HTML
-       var html = "<div>"
-       html += ""
-       html += "<h1>Name of Card</h1>"
-       html += "<input type='text' ng-model='cardTitle'><br>"
-       html += "<h2>Short Description of Card</h2>"
-       html += "<input type='text' ng-model='cardDescription'><br>"
-       html += "</div>"
-       html += "<p>"
-       html += "<button ng-click='cancel()'>Cancel</button>"
-       html += "<button ng-click='confirm()'>Confirm</button>"
-       html += "</p>"
+       var html = "<div>";
+       html += "";
+       html += "<h1>Name of Card</h1>";
+       html += "<input type='text' ng-model='cardTitle'><br>";
+       html += "<h2>Short Description of Card</h2>";
+       html += "<input type='text' ng-model='cardDescription'><br>";
+       html += "</div>";
+       html += "<p>";
+       html += "<button style=\"margin-top:1em; margin-right:0.5em;\" class=\"btn btn-basic\" ng-click='confirm()'>Confirm</button>";
+       html += "<button style=\"margin-top:1em; margin-right:0.5em;\" class=\"btn btn-basic\" ng-click='cancel()'>Cancel</button>";
+       html += "</p>";
 
-       var card = $scope.cards 
+       var card = $scope.cards;
 
        //Prompt the user to name the card
        ngDialog.open({
@@ -96,6 +108,10 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                 height: 400,
                 className: 'ngdialog-theme-plain',
                 controller:  ['$scope', function($scope){
+
+                    $scope.cancel = function(){
+                        ngDialog.close()
+                    };
 
                     $scope.confirm = function(){
                         //Send the card with the title and description
@@ -112,11 +128,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
 
                         //close the dialog box
                         ngDialog.close()
-                    }
+                    };
 
-                    $scope.cancel = function(){
-                        ngDialog.close()
-                    }
+
                 }]
  
         }); 
@@ -139,10 +153,10 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         else{//loop it
             saveCounter = 0;
         }
-        console.log($scope.cards)
+        // console.log($scope.cards);
         $scope.cardCounter = saveCounter;
         $scope.currentCard = $scope.cards[$scope.cardCounter];
-    }
+    };
 
     $scope.transformServerObjToCard = function(serverCards){
         for(i=0; i<serverCards.media.length; ++i){
@@ -150,10 +164,10 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
             $scope.newSide(serverCards.media[i].type, serverCards.media[i].url,
                 serverCards.media[i].text)
         }
-    }
+    };
 
     $scope.getCard = function(){
-        var cardID = isLegitCard.getCard()
+        var cardID = isLegitCard.getCard();
         if(cardID == {}){
             //nope, new card
         }
@@ -169,7 +183,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
             });
         }
 
-    }
+    };
 
     //Do these on load
     $scope.onload = function(){
@@ -180,15 +194,60 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         
 
         $scope.currentCard = $scope.cards[0];
-        console.log($scope.currentCard);
-        $scope.currentCard = "test";
-        console.log($scope.cards)
-        console.log($scope.currentCard)
+        // console.log($scope.currentCard);
+        // $scope.currentCard = "test";
+        // console.log($scope.cards);
+        // console.log($scope.currentCard);
+    };
+
+    $scope.resetMenu = function() {
+        $scope.addmenu = true;
+        $scope.deletemenu = true;
+        $scope.editmenu = true;
+        $scope.modifymenu = true;
+        $scope.textmenu=true;
+        $scope.videomenu=true;
+    };
+
+    $scope.toggleEdit = function() {
+        if ($scope.currentCard.type == "text") {
+            $scope.textfield = $scope.currentCard.text;
+            $scope.textmenu = false;
+        } else {
+            $scope.videomenu = false;
+        }
+    };
+
+    $scope.updateText = function(tex) {
+        $scope.currentCard.text=tex;
+        $scope.resetMenu();
+    };
+
+    $scope.updateVideo = function(file, errFiles) {
+        if(file){
+            //upload user file to server using ng-file-upload
+            var urlPrefix = "http://localhost:3000/";
+
+            Upload.upload({
+                url: 'http://localhost:3000/upload',
+                method: 'POST',
+                file: file
+
+            }).success(function(response,status){
+                $scope.resetMenu();
+                $scope.currentCard.type = response.media_type;
+                $scope.currentCard.url=urlPrefix + response.url;
+
+            }).error(function(err){
+                //error
+                Logger.log("Error occurred while sending " +
+                    "file to server: " + err)
+            });
+        }
     }
+
 
     //call it on load
     $scope.onload(); 
-    
 
 }]);
-

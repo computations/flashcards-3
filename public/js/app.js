@@ -24,7 +24,8 @@ app.config(function($routeProvider) {
         // route for the cards page
         .when('/card', {
             templateUrl : '../html/pages/card.html',
-            controller  : 'flashcardController'
+            controller  : 'flashcardController',
+            resolve     : 'flashcardController.resolve'
         })
         // route for the abouts page
         .when('/about', {

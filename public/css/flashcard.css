@@ -199,6 +199,9 @@ div.textbox {
   display: inline-block;
   float: none;
 }
+button.ngdialog-close {
+  display: none;
+}
 /*
 @media @tablet {
         .flip-container, .front, .back {
