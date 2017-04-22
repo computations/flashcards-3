@@ -52,9 +52,6 @@ app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $
             method: 'GET',
             url: 'http://localhost:3000/cards/'
         }).then(function(success){
-            console.log(success)
-            console.log(success.data[0].media[0].url)
-
         }, function(error){
             console.log(error)
         });
@@ -68,7 +65,7 @@ app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $
             method: 'GET',
             url: card_url
         }).then(function(success){
-            console.log(success)
+
         }, function(error){
             console.log(error)
         });
@@ -82,7 +79,7 @@ app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $
             method: 'POST',
             url: card_url
         }).then(function(success){
-            console.log(success)
+
         }, function(error){
             console.log(error)
         });
@@ -114,13 +111,11 @@ app.directive('loadCards', function ($http, $compile) {
                 //Gets all the cards from the server
             //Usage: Check API.md for URL needed
         scope.$watch('onloadVar' , function(){
-            console.log("onloadVar changed")
             $http({
             method: 'GET',
             url: 'http://localhost:3000/card'
         }).then(function(success){
-            console.log(success.data.length)
-            console.log(success.data)
+
             var div = ""
             for(var i=0; i<success.data.length; i++){
                 var html = '<div class="col-sm-4 col-lg-4 col-md-4">';
