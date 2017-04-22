@@ -125,6 +125,7 @@ class TestGetCalls(unittest.TestCase):
         self.assertEqual(cards_r.status_code, 200)
         cards = cards_r.json()
         self.assertTrue(len(cards) != 0)
+        self.assertTrue(type(cards) is list)
     
     def test_makeDeck(self):
         cards = requests.get(TEST_URL+"/card/").json()

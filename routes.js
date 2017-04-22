@@ -112,3 +112,22 @@ exports.create_deck = function(req, res){
         );
     });
 }
+
+exports.update_deck = function(req, res){
+    deck_id = req.params.deck;
+    new_cards = req.body.cards;
+    deck_model.find(_id : deck_id, (err, deck, n){
+        if(deck.length == 1){
+            card_model.findByIdAndUpdate(
+                _id : {$in: new_cards}, 
+                {$push: {"decks": deck_id}},
+                {safe: true, upsert:true},
+                (err, _) => {
+                    if(err){
+                        console.log(err);
+                    }
+                }
+            }
+        }
+    );
+}
