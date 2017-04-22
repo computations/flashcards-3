@@ -5,6 +5,7 @@ var crypto = require('crypto');
 var fs = require('fs');
 
 exports.get_all_cards = function(req, res, next){
+    console.log("getting all cards");
     card_model.find(function(err, docs){
         if(err) return next(err);
         return res.send(docs);
@@ -65,9 +66,14 @@ exports.create_card = function(req, res, next){
     for(var m of req.body.media){
         media_list.push( new media_model(m));
     }
+    console.log("requested media list");
     console.log(media_list)
     var new_card = new card_model({media:media_list});
-    new_card.save();
+    new_card.save((err) =>{
+        if(err){
+            console.log(err);
+        }
+    });
     console.log(new_card._id);
     res.send(new_card._id);
     next();

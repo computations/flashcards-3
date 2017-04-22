@@ -69,11 +69,13 @@ class TestGetCalls(unittest.TestCase):
         pre_num_cards = len(requests.get(TEST_URL+'/card').json())
         with open(TEST_CONTENT+"/test_1.svg", 'rb') as testimg:
             files = { 'file':('test_1.svg', testimg, 'image/svg+xml')}
-            imgpath = requests.post(TEST_URL+"/upload",
-                    files=files).json()['url']
+            ret_json = requests.post(TEST_URL+"/upload",
+                    files=files).json()
+            imgpath = ret_json['url']
+            filetype = ret_json['media_type']
 
         media_list = []
-        media_list.append({'type':'image', 'url':imgpath})
+        media_list.append({'type':filetype, 'url':imgpath})
         media_list.append({'type':'text', 'text':'ASL'})
         media_list.append({'type':'text', 'text':'American Sign Language (ASL) is a natural language that serves as the predominant sign language of Deaf communities'})
         r = requests.post(TEST_URL+'/card', json={'media':media_list})
