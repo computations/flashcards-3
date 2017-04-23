@@ -13,40 +13,79 @@ var Logger = (function () {
 
 //app controller is the main controller for site (routes)
 var app = angular.module('app',['ngAnimate', 'ngFileUpload', 'ngRoute', 'ngSanitize', 'ngDialog']);
+var admin = true //student vs admin view
 
-app.config(function($routeProvider) {
-    $routeProvider
-    // route for the home page
-        .when('/', {
-            templateUrl : '../html/pages/home.html',
-            controller  : 'mainController'
-        })
-        // route for the cards page
-        .when('/card', {
-            templateUrl : '../html/pages/card.html',
-            controller  : 'flashcardController',
-            resolve     : 'flashcardController.resolve'
-        })
-        // route for the abouts page
-        .when('/about', {
-            templateUrl: '../html/pages/about.html',
-            controller : 'aboutController'
-        })
-        // route for the contact page
-        .when('/test', {
-            templateUrl : '../html/pages/test.html',
-            controller  : 'testController'
-        })
-        .when('/signin', {
-            templateUrl : '../html/pages/admin.html',
-            controller  : 'adminController'
-        })
-        .when('/viewCardsInDeck', {
-            templateUrl : '../html/pages/viewCards.html',
-            controller : 'viewCardController'
-        }); 
-});
-
+if (admin) {
+    app.config(function($routeProvider) {
+        $routeProvider
+        // route for the home page
+            .when('/', {
+                templateUrl : '../html/pages/home.html',
+                controller  : 'mainController'
+            })
+            // route for the cards page
+            .when('/card', {
+                templateUrl : '../html/pages/card.html',
+                controller  : 'flashcardController',
+                resolve     : 'flashcardController.resolve'
+            })
+            // route for the abouts page
+            .when('/about', {
+                templateUrl: '../html/pages/about.html',
+                controller : 'aboutController'
+            })
+            // route for the contact page
+            .when('/test', {
+                templateUrl : '../html/pages/test.html',
+                controller  : 'testController'
+            })
+            .when('/signin', {
+                templateUrl : '../html/pages/admin.html',
+                controller  : 'adminController'
+            })
+            .when('/viewCardsInDeck', {
+                templateUrl : '../html/pages/viewCards.html',
+                controller : 'viewCardController'
+            })
+            .when('/cardQuiz', {
+                templateUrl : '../html/pages/cardQuiz.html',
+                controller : 'viewCardController'            
+            });
+    });
+} else {
+    app.config(function($routeProvider) {
+        $routeProvider
+        // route for the home page
+            .when('/', {
+                templateUrl : '../html/pages/home.html',
+                controller  : 'mainController'
+            })
+            // route for the cards page
+            .when('/card', {
+                templateUrl : '../html/pages/card.html',
+                controller  : 'flashcardController',
+                resolve     : 'flashcardController.resolve'
+            })
+            // route for the abouts page
+            .when('/about', {
+                templateUrl: '../html/pages/about.html',
+                controller : 'aboutController'
+            })
+            // route for the contact page
+            .when('/test', {
+                templateUrl : '../html/pages/test.html',
+                controller  : 'testController'
+            })
+            .when('/signin', {
+                templateUrl : '../html/pages/admin.html',
+                controller  : 'adminController'
+            })
+            .when('/viewCardsInDeck', {
+                templateUrl : '../html/pages/cardQuiz.html',
+                controller : 'quizController'
+            });
+    });
+}
 
 app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $http, Upload) {
    
@@ -127,7 +166,7 @@ app.directive('loadCards', function ($http, $compile, isLegitCard) {
             //Making a new deck, server won't respond
             return; 
         }
-
+        
         //Dynamically show all cards in this deck
         scope.$watch('onloadVar' , function(){
             $http({
@@ -141,19 +180,28 @@ app.directive('loadCards', function ($http, $compile, isLegitCard) {
                 var html = '<div class="col-sm-4 col-lg-4 col-md-4">';
                 html += '<div class="thumbnail">';
 
-                //find an image side on the card to view 
-                if(success.data[0].media[i].url){
-                    html += '<img src="' + success.data[0].media[i].url + '" alt="http://placehold.it/320x150">';
+                var imageFound = false
+                //loop through card sides to find valid image
+                for(var j=0; j<success.data[i].media.length; ++j){
+
+                    //find an image side on the card to view 
+                    if(success.data[i].media[j].url){
+                        html += '<img src="' + success.data[i].media[j].url + '" alt="http://placehold.it/320x150">';
+                        imageFound = true; 
+                        break; //break out of for loop, only 1 image needed 
+                    }
                 }
-                else{
+
+                if(!imageFound){
                     //replace image with default
                     html += '<img src="http://placehold.it/320x150" alt="">'; 
                 }
 
+
                 html += '<div class="caption">';
-                html += '<h4><a href="#!card" ng-click="toCard(&quot;' + success.data[0].media[i]._id.toString() + '&quot;)">' + success.data.media[i].title + '</a>'; 
+                html += '<h4><a href="#!card" ng-click="toCard(&quot;' + success.data[i]._id.toString() + '&quot;)">' + success.data[i].title + '</a>'; 
                 html += '</h4>'; 
-                html += '<p>' + success.data[0].media[i].description + '</p>'; 
+                html += '<p>' + success.data[i].description + '</p>'; 
                 html += '</div>'; 
                 html += '</div>'; 
                 html += '</div>'; 
