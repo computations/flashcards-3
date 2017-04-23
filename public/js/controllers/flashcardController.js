@@ -85,7 +85,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.addNewCard = function(){
         $scope.resetMenu();
         var deckID = isLegitCard.getDeck()
-        if ($scope.newcard == true) {
+        console.log(deckID)
+        console.log("isnewcard: ", $scope.newcard)
+        if ($scope.newcard) {
             if (deckID == 0) {
                 //A new Deck obj to be created
                 //Dialog Box HTML
@@ -122,12 +124,39 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                             $http({
                                 method: 'POST',
                                 url: 'http://localhost:3000/card/',
-                                data: {'media': card}, //An array of the card's sides,
-                                description: $scope.cardTitle,
-                                title: $scope.cardDescription
+                                data: {
+                                    media: card,
+                                    title: $scope.cardTitle,
+                                    description: $scope.cardDescription
+                                }, //An array of the card's sides,
+                               
                                 //each side is json
                             }).then(function (res) {
-                                console.log(res);
+                                var cardID = res.data;
+                                //get an image from the card for the deck to use
+                                var img_url = "http://placehold.it/320x150"; 
+                                for(var c=0; c<card.length; ++c){
+                                    if(card[c].url){
+                                        //card has an image, give to the deck
+                                        img_url = card[c].url; 
+                                    }
+                                }
+
+                                $http({
+                                    method: 'POST',
+                                    url: 'http://localhost:3000/deck/',
+                                    data: {
+                                        title: $scope.deckTitle,
+                                        desc: $scope.deckDescription,
+                                        imgUrl: img_url,
+                                        cards: [cardID]
+                                    }
+                                }).then(function(response){
+    
+                                }, function(deckError){
+                                    Logger.log("Deck POST error: ", deckError)
+                                }); 
+
 
                             }, function (error) {
                                 Logger.log(error)
@@ -180,7 +209,21 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                                 title: $scope.cardDescription
                                 //each side is json
                             }).then(function (res) {
-                                console.log(res);
+                                console.log("CARD ID IN EXISTING DECK: ", res);
+
+                                var cardIDArr = [res.data]; 
+
+                                var deckID = isLegitCard.getDeck(); 
+                                console.log("DECK ID IN EXISING DESK: ", deckID);
+                                $http({
+                                    method: 'POST',
+                                    url: 'http://localhost:3000/deck/' + deckID,
+                                    data: {'cards': cardIDArr}
+                                }).then(function(response){
+                                    console.log("Making new card in existing deck: ", response)
+                                }, function(errors){
+                                    Logger.log(errors)
+                                }); 
 
                             }, function (error) {
                                 Logger.log(error)
@@ -286,30 +329,26 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
 
     $scope.getCard = function() {
         var cardID = isLegitCard.getCard();
-        if (cardID == {}) {
-
-            var cardID = isLegitCard.getCard()
-            if (cardID == {} || cardID == 0 || cardID == undefined) {
-                //nope, new card
-                $scope.newcard = true;
-                return;
-            }
-            else {
-
-                //Get the card data from the server
-                $http({
-                    method: 'GET',
-                    url: 'http://localhost:3000/card/' + cardID
-                }).then(function (success) {
-                    $scope.transformServerObjToCard(success.data)
-                    $scope.newcard = false;
-                }, function (error) {
-                    Logger.log(error)
-                });
-            }
-
+        if (cardID == {} || cardID == 0 || cardID == undefined) {
+            //nope, new card
+           $scope.newcard = true;
+            return;
         }
-    };
+        else {
+
+            //Get the card data from the server
+            $http({
+                method: 'GET',
+                url: 'http://localhost:3000/card/' + cardID
+            }).then(function (success) {
+                $scope.transformServerObjToCard(success.data)
+                $scope.newcard = false;
+            }, function (error) {
+                Logger.log(error)
+            });
+        }
+    }
+
 
     //Do these on load
     $scope.onload = function(){
