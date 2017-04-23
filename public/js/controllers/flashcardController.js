@@ -119,7 +119,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                             //Send the card with the title and description
                             $http({
                                 method: 'POST',
-                                url: 'http://localhost:3000/card/',
+                                url: 'http://localhost:3000/deck',
                                 data:{'media': card} //An array of the card's sides,
                                                         //each side is json
                             }).then(function(res){

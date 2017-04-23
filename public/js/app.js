@@ -13,40 +13,79 @@ var Logger = (function () {
 
 //app controller is the main controller for site (routes)
 var app = angular.module('app',['ngAnimate', 'ngFileUpload', 'ngRoute', 'ngSanitize', 'ngDialog']);
+var admin = true //student vs admin view
 
-app.config(function($routeProvider) {
-    $routeProvider
-    // route for the home page
-        .when('/', {
-            templateUrl : '../html/pages/home.html',
-            controller  : 'mainController'
-        })
-        // route for the cards page
-        .when('/card', {
-            templateUrl : '../html/pages/card.html',
-            controller  : 'flashcardController',
-            resolve     : 'flashcardController.resolve'
-        })
-        // route for the abouts page
-        .when('/about', {
-            templateUrl: '../html/pages/about.html',
-            controller : 'aboutController'
-        })
-        // route for the contact page
-        .when('/test', {
-            templateUrl : '../html/pages/test.html',
-            controller  : 'testController'
-        })
-        .when('/signin', {
-            templateUrl : '../html/pages/admin.html',
-            controller  : 'adminController'
-        })
-        .when('/viewCardsInDeck', {
-            templateUrl : '../html/pages/viewCards.html',
-            controller : 'viewCardController'
-        }); 
-});
-
+if (admin) {
+    app.config(function($routeProvider) {
+        $routeProvider
+        // route for the home page
+            .when('/', {
+                templateUrl : '../html/pages/home.html',
+                controller  : 'mainController'
+            })
+            // route for the cards page
+            .when('/card', {
+                templateUrl : '../html/pages/card.html',
+                controller  : 'flashcardController',
+                resolve     : 'flashcardController.resolve'
+            })
+            // route for the abouts page
+            .when('/about', {
+                templateUrl: '../html/pages/about.html',
+                controller : 'aboutController'
+            })
+            // route for the contact page
+            .when('/test', {
+                templateUrl : '../html/pages/test.html',
+                controller  : 'testController'
+            })
+            .when('/signin', {
+                templateUrl : '../html/pages/admin.html',
+                controller  : 'adminController'
+            })
+            .when('/viewCardsInDeck', {
+                templateUrl : '../html/pages/viewCards.html',
+                controller : 'viewCardController'
+            })
+            .when('/cardQuiz', {
+                templateUrl : '../html/pages/cardQuiz.html',
+                controller : 'viewCardController'            
+            });
+    });
+} else {
+    app.config(function($routeProvider) {
+        $routeProvider
+        // route for the home page
+            .when('/', {
+                templateUrl : '../html/pages/home.html',
+                controller  : 'mainController'
+            })
+            // route for the cards page
+            .when('/card', {
+                templateUrl : '../html/pages/card.html',
+                controller  : 'flashcardController',
+                resolve     : 'flashcardController.resolve'
+            })
+            // route for the abouts page
+            .when('/about', {
+                templateUrl: '../html/pages/about.html',
+                controller : 'aboutController'
+            })
+            // route for the contact page
+            .when('/test', {
+                templateUrl : '../html/pages/test.html',
+                controller  : 'testController'
+            })
+            .when('/signin', {
+                templateUrl : '../html/pages/admin.html',
+                controller  : 'adminController'
+            })
+            .when('/viewCardsInDeck', {
+                templateUrl : '../html/pages/cardQuiz.html',
+                controller : 'quizController'
+            });
+    });
+}
 
 app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $http, Upload) {
    
