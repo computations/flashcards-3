@@ -78,7 +78,11 @@ class TestGetCalls(unittest.TestCase):
         media_list.append({'type':filetype, 'url':imgpath})
         media_list.append({'type':'text', 'text':'ASL'})
         media_list.append({'type':'text', 'text':'American Sign Language (ASL) is a natural language that serves as the predominant sign language of Deaf communities'})
-        r = requests.post(TEST_URL+'/card', json={'media':media_list})
+
+        card_title = "A test card from the tests"
+        card_desc = "Some descriptive text"
+        r = requests.post(TEST_URL+'/card', json={'media':media_list, 'title':
+            card_title, 'description':card_desc})
         
         resp_text = r.text.strip('"')
         print(resp_text)
@@ -91,6 +95,8 @@ class TestGetCalls(unittest.TestCase):
         self.assertEqual(r.status_code, 200)
         returned_card = r.json()
         self.assertTrue('media' in returned_card)
+        self.assertEqual(returned_card['title'], card_title)
+        self.assertEqual(returned_card['description'], card_desc)
         self.assertEqual(len(returned_card['media']), 3)
         media = returned_card['media']
         self.assertTrue('type' in media[0])

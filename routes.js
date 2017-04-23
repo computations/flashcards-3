@@ -67,7 +67,7 @@ exports.create_card = function(req, res, next){
     for(var m of req.body.media){
         media_list.push( new media_model(m));
     }
-    new_title=req.body.title;
+    new_title = req.body.title;
     new_desc = req.body.description;
     console.log("requested media list");
     console.log(media_list)
