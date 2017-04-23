@@ -48,6 +48,8 @@ card_model.remove({}, function(err){
     example_deck.save()
 
     var example_card = new card_model({
+        title: "The First Card",
+        description: "This is the card that is made when the server starts",
         media : [example_media],
         decks : [example_deck]
     });
