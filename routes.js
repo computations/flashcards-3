@@ -104,20 +104,11 @@ exports.update_card = function(req, res, next){
 }
 
 exports.get_decks = function(req, res, next){
-    card_model.distinct('decks', function(err, cols){
+    deck_model.find({}, (err, decks) => {
         if(err){
             console.log(err);
         }
-        d_decks = {}
-        console.log(cols)
-        for(let d of cols){
-            if(!d_decks[d._id]){
-                d_decks[d._id] = d;
-            }
-        }
-        ret_list = Object.keys(d_decks).map( key => {return d_decks[key];});
-        res.send(ret_list);
-        console.log("done");
+        res.send(decks);
     });
 }
 
