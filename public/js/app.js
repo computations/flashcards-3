@@ -166,7 +166,7 @@ app.directive('loadCards', function ($http, $compile, isLegitCard) {
             //Making a new deck, server won't respond
             return; 
         }
-        
+
         //Dynamically show all cards in this deck
         scope.$watch('onloadVar' , function(){
             $http({
@@ -176,7 +176,7 @@ app.directive('loadCards', function ($http, $compile, isLegitCard) {
 
             var div = ""
             //Loop through the cards in the deck
-            for(var i=0; i<success.data[0].media.length; i++){
+            for(var i=0; i<success.data.length; i++){
                 var html = '<div class="col-sm-4 col-lg-4 col-md-4">';
                 html += '<div class="thumbnail">';
 
