@@ -140,29 +140,25 @@ exports.create_deck = function(req, res){
 
 exports.add_cards_to_deck = function(req, res){
     deck_id = req.params.deck;
+    console.log("deck id:", deck_id);
     new_cards = req.body.cards;
-    deck_model.find({'_id' : deck_id}, (err, deck, n) => {
+    deck_model.findOne({'_id' : deck_id}, (err, deck, n) => {
+        console.log(deck);
         if(err){
             console.log(err);
         }
-        if(deck.length == 1){
-            new_cards.forEach( id => {
-                console.log("add card to deck card id: "+ id);
-                card_model.update(
-                    {_id: id},
-                    {$push: {decks: deck}},
-                    {safe: false, upsert:true},
-                    (err, num) => {
-                        if(err){
-                            console.log(err);
-                        }
-                    }
-                );
-            });
-            res.send();
-        }
         else{
-            res.send();
+            card_model.update(
+                {_id: {$in: new_cards}},
+                {$push: {decks: deck}},
+                {safe: true, upsert:true},
+                (err, num) => {
+                    if(err){
+                        console.log(err);
+                    }
+                    res.send();
+                }
+            );
         }
     });
 }
