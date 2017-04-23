@@ -14,6 +14,8 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.currentCard = $scope.cards[0];
     $scope.cardCounter = 0;
     $scope.isCardRevealed = true;
+    $scope.title="";
+    $scope.description="";
 
     //will be used to trigger whether or not card back will be displayed
     $scope.clickBack = true;
@@ -204,9 +206,12 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                             $http({
                                 method: 'POST',
                                 url: 'http://localhost:3000/card/',
-                                data: {'media': card}, //An array of the card's sides,
-                                description: $scope.cardTitle,
-                                title: $scope.cardDescription
+                                data: 
+                                {
+                                    media: card, //An array of the card's sides,
+                                    title: $scope.cardTitle,
+                                    description: $scope.cardDescription
+                                }
                                 //each side is json
                             }).then(function (res) {
                                 console.log("CARD ID IN EXISTING DECK: ", res);
@@ -241,7 +246,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                 });
             }
         } else {
-
+            //updating a card previously made
 
             var html = "<div>"
             html += ""
@@ -256,8 +261,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
             html += "</p>"
 
             var card = $scope.cards;
-            var cardTitle = $scope.cards.title;
-            var cardDescription = $scope.cards.description;
+            var title = $scope.title;
+            var description = $scope.description;
+            var cardID = isLegitCard.getCard()
             //Prompt the user to name the card
             ngDialog.open({
                 template: html,
@@ -266,19 +272,23 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                 height: 400,
                 className: 'ngdialog-theme-plain',
                 controller: ['$scope', function ($scope) {
-                    $scope.cardTitle = cardTitle;
-                    $scope.cardDescription = cardDescription;
+                    $scope.cardTitle = title;
+                    $scope.cardDescription = description;
+
                     $scope.confirm = function () {
                         //Send the card with the title and description
                         $http({
                             method: 'POST',
-                            url: 'http://localhost:3000/card/',
-                            data: {'media': card}, //An array of the card's sides,
-                            description: $scope.cardTitle,
-                            title: $scope.cardDescription
+                            url: 'http://localhost:3000/card/' + cardID,
+                            data: {
+                                media: card,
+                                title: $scope.cardTitle,
+                                description: $scope.cardDescription
+                            } //An array of the card's sides,
+                            
                             //each side is json
                         }).then(function (res) {
-                            console.log(res)
+                            //console.log(res)
 
                         }, function (error) {
                             Logger.log(error)
@@ -341,6 +351,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                 method: 'GET',
                 url: 'http://localhost:3000/card/' + cardID
             }).then(function (success) {
+                console.log (success.data)
+                $scope.title = success.data.title;
+                $scope.description = success.data.description;
                 $scope.transformServerObjToCard(success.data)
                 $scope.newcard = false;
             }, function (error) {
