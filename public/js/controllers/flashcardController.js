@@ -87,8 +87,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.addNewCard = function(){
         $scope.resetMenu();
         var deckID = isLegitCard.getDeck()
-        console.log(deckID)
-        console.log("isnewcard: ", $scope.newcard)
+
         if ($scope.newcard) {
             if (deckID == 0) {
                 //A new Deck obj to be created
@@ -214,18 +213,15 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                                 }
                                 //each side is json
                             }).then(function (res) {
-                                console.log("CARD ID IN EXISTING DECK: ", res);
-
                                 var cardIDArr = [res.data]; 
 
                                 var deckID = isLegitCard.getDeck(); 
-                                console.log("DECK ID IN EXISING DESK: ", deckID);
+
                                 $http({
                                     method: 'POST',
                                     url: 'http://localhost:3000/deck/' + deckID,
                                     data: {'cards': cardIDArr}
                                 }).then(function(response){
-                                    console.log("Making new card in existing deck: ", response)
                                 }, function(errors){
                                     Logger.log(errors)
                                 }); 
@@ -288,7 +284,6 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                             
                             //each side is json
                         }).then(function (res) {
-                            //console.log(res)
 
                         }, function (error) {
                             Logger.log(error)
@@ -351,7 +346,6 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                 method: 'GET',
                 url: 'http://localhost:3000/card/' + cardID
             }).then(function (success) {
-                console.log (success.data)
                 $scope.title = success.data.title;
                 $scope.description = success.data.description;
                 $scope.transformServerObjToCard(success.data)
@@ -373,10 +367,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
             $scope.cards.pop()
         }
         $scope.currentCard = $scope.cards[0];
-        // console.log($scope.currentCard);
-        // $scope.currentCard = "test";
-        // console.log($scope.cards);
-        // console.log($scope.currentCard);
+
     };
 
     $scope.resetMenu = function() {
