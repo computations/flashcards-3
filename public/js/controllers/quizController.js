@@ -66,7 +66,7 @@ app.controller('quizController', ['$scope', 'Upload', '$http','ngDialog', 'isLeg
                 //Get the card data from the server
                 $http({
                     method: 'GET',
-                    url: 'http://localhost:3000/card/' + cardID
+                    url: 'http://moonlanding.exposed:3000/card/' + cardID
                 }).then(function (success) {
                     $scope.transformServerObjToCard(success.data)
                 }, function (error) {

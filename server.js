@@ -23,8 +23,8 @@ var app_secrets = require('./secrets');
 /******************************************************************************
  * Some useful const values. These need to be changed when deployed
  */
-const http__url = "http://localhost:3000" 
-const https_url = "https://localhost:3443" 
+const http__url = "http://moonlanding.exposed:3000" 
+const https_url = "https://moonlanding.exposed:3443" 
 
 /*
  * While we are testing, clear the database everytime the app starts
