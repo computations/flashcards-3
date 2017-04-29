@@ -118,6 +118,9 @@ app.get(
         res.redirect('/');
     }
 );
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+});
 
 /******************************************************************************
  *Routing
