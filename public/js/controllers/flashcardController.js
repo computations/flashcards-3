@@ -65,10 +65,10 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
 
         if(file){
             //upload user file to server using ng-file-upload
-            var urlPrefix = "http://localhost:3000/"
+            var urlPrefix = "http://moonlanding.exposed:3000/"
 
             Upload.upload({
-                url: 'http://localhost:3000/upload',
+                url: 'http://moonlanding.exposed:3000/upload',
                 method: 'POST', 
                 file: file
 
@@ -125,7 +125,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                             //Send the card with the title and description
                             $http({
                                 method: 'POST',
-                                url: 'http://localhost:3000/card/',
+                                url: 'http://moonlanding.exposed:3000/card/',
                                 data: {
                                     media: card,
                                     title: $scope.cardTitle,
@@ -146,7 +146,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
 
                                 $http({
                                     method: 'POST',
-                                    url: 'http://localhost:3000/deck/',
+                                    url: 'http://moonlanding.exposed:3000/deck/',
                                     data: {
                                         title: $scope.deckTitle,
                                         desc: $scope.deckDescription,
@@ -205,7 +205,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                             //Send the card with the title and description
                             $http({
                                 method: 'POST',
-                                url: 'http://localhost:3000/card/',
+                                url: 'http://moonlanding.exposed:3000/card/',
                                 data: 
                                 {
                                     media: card, //An array of the card's sides,
@@ -220,7 +220,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
 
                                 $http({
                                     method: 'POST',
-                                    url: 'http://localhost:3000/deck/' + deckID,
+                                    url: 'http://moonlanding.exposed:3000/deck/' + deckID,
                                     data: {'cards': cardIDArr}
                                 }).then(function(response){
                                 }, function(errors){
@@ -276,7 +276,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                         //Send the card with the title and description
                         $http({
                             method: 'POST',
-                            url: 'http://localhost:3000/card/' + cardID,
+                            url: 'http://moonlanding.exposed:3000/card/' + cardID,
                             data: {
                                 media: card,
                                 title: $scope.cardTitle,
@@ -348,7 +348,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
             //Get the card data from the server
             $http({
                 method: 'GET',
-                url: 'http://localhost:3000/card/' + cardID
+                url: 'http://moonlanding.exposed:3000/card/' + cardID
             }).then(function (success) {
                 $scope.title = success.data.title;
                 $scope.description = success.data.description;
@@ -403,10 +403,10 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.updateVideo = function(file, errFiles) {
         if(file){
             //upload user file to server using ng-file-upload
-            var urlPrefix = "http://localhost:3000/";
+            var urlPrefix = "http://moonlanding.exposed:3000/";
 
             Upload.upload({
-                url: 'http://localhost:3000/upload',
+                url: 'http://moonlanding.exposed:3000/upload',
                 method: 'POST',
                 file: file
 

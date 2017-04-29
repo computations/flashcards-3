@@ -94,7 +94,7 @@ app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $
             //Usage: Check API.md for URL needed
         $http({
             method: 'GET',
-            url: 'http://localhost:3000/card/'
+            url: 'http://moonlanding.exposed:3000/card/'
         }).then(function(success){
         }, function(error){
             console.log(error)
@@ -104,7 +104,7 @@ app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $
     $scope.getCard = function(cardID){
             //Gets all the cards from the server
         //Usage: Check API.md for URL needed
-        card_url = 'http://localhost:3000/card/' + cardID
+        card_url = 'http://moonlanding.exposed:3000/card/' + cardID
         $http({
             method: 'GET',
             url: card_url
@@ -118,7 +118,7 @@ app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $
     //Give card to server
     $scope.sendCard = function(){
         //make a cardID here? 
-        card_url = 'http://localhost:3000/card/' + cardID
+        card_url = 'http://moonlanding.exposed:3000/card/' + cardID
         $http({
             method: 'POST',
             url: card_url
@@ -175,7 +175,7 @@ app.directive('loadCards', function ($http, $compile, isLegitCard) {
         scope.$watch('onloadVar' , function(){
             $http({
             method: 'GET',
-            url: 'http://localhost:3000/deck/' + deckID
+            url: 'http://moonlanding.exposed:3000/deck/' + deckID
         }).then(function(success){
 
             var div = ""
@@ -236,7 +236,7 @@ app.directive('loadDecks', function ($http, $compile) {
         scope.$watch('onloadDeckVar' , function(){
             $http({
             method: 'GET',
-            url: 'http://localhost:3000/deck'
+            url: 'http://moonlanding.exposed:3000/deck'
         }).then(function(success){
 
             var div = ""

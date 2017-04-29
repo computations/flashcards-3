@@ -1,6 +1,7 @@
 var card_model = require('./models/modelCard');
 var media_model = require('./models/modelMedia');
 var deck_model = require('./models/modelDeck');
+var user_model = require('./models/modelUser');
 var crypto = require('crypto');
 var fs = require('fs');
 var mongoose = require('mongoose');
@@ -159,6 +160,83 @@ exports.add_cards_to_deck = function(req, res){
                     res.send();
                 }
             );
+        }
+    });
+}
+var card_include_check = function (card) {
+    var recent_date = card.correct_dates[0]
+    var backoff = new Date(recent_date);
+    backoff.setDate(newdate.getDate()+2*card.num_correct);
+    var now = new Date();
+    return backoff < now;
+};
+
+exports.get_user = function(req, res){
+    res.send(req.user);
+}
+
+exports.get_quiz = function(req, res){
+    if(!req.user){
+        res.send();
+    }
+    else{
+        var deck_id = req.params.deck;
+        card_model.find({"decks._id": deck_id}, (err,docs) => {
+            card_ids = []
+            for(let c of docs){
+                card_ids.push(c._id);
+            }
+            var user_query = { 
+                "user_id":req.user.user_id,
+                "card_history.card": {$in : card_ids}
+            };
+            user_model.find(user_query,  (err, cards) =>{
+                var quiz_card_ids = card_ids;
+                for(let c of cards){
+                    if(!card_include_check(c)){
+                        console.log("removing card",c );
+                        var idx = quiz_card_ids.indexOf(c);
+                        quiz_card_ids.splice(idx, 1);
+                    }
+                }
+                console.log(quiz_card_ids);
+                var query = {"_id" : {$in : quiz_card_ids}};
+                card_model.find(query, (err, quiz_cards) => {
+                    res.send(quiz_cards);
+                });
+            });
+        });
+    }
+};
+
+//need to insure assumptions
+// - dates are sorted, descending
+// - num_correct is correct
+exports.update_quiz = function(req, res){
+    var user_id = req.user.id;
+    var update_card = req.body.card_id;
+    var query = {
+        "user_id": user_id,
+    };
+
+    user_model.findOneAndUpdate(query, null, {upsert:true}, (err, user)=>{
+        if(err) console.log(err);
+        else{
+            var idx = 0;
+            for(var i = 0; i < user.card_history.length; ++i){
+                if(user.card_history[i].card == update_card){
+                    idx = i;
+                    break;
+                }
+            }
+            if(req.body.correct){
+                user.card_history[idx].correct_dates.unshift(new Date());
+                user.card_history[idx].num_correct+=1;
+            }
+            else{
+                user.card_history[idx].num_correct=0;
+            }
+            user.save();
         }
     });
 }
