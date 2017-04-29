@@ -73,7 +73,7 @@ exports.create_card = function(req, res, next){
     console.log("requested media list");
     console.log(media_list)
     var new_card = new card_model({media:media_list, title:new_title, 
-        description:new_desc});
+        description:new_desc, owner: req.user.user_id});
     new_card.save((err) =>{
         if(err){
             console.log(err);
@@ -85,23 +85,41 @@ exports.create_card = function(req, res, next){
 };
 
 exports.update_card = function(req, res, next){
-    var update_card = {}
-    if(req.body.media){
-        update_card.media = [];
-        for(var m of req.body.media){
-            update_card.media.push(new media_model(m));
+    card_model.findOne({"_id": req.params.id}, (err, card) =>{
+        if(card.owner != req.user.user_id){ 
+            res.send();
+            return;
         }
-    }
-    if(req.body.title){
-        update_card.title=req.body.title;
-    }
-    if(req.body.description){
-        update_card.description = req.body.description;
-    }
-    console.log("updating card: " + req.params.id);
-    card_model.update({'_id':req.params.id}, update_card, {}, 
-            (err, num) => { console.log( num);
-                if(err){console.log(err);} res.send(); });
+        if(req.body.media){
+            card.media = [];
+            for(var m of req.body.media){
+                card.media.push(new media_model(m));
+            }
+        }
+        if(req.body.title){
+            card.title=req.body.title;
+        }
+        if(req.body.description){
+            card.description = req.body.description;
+        }
+        console.log("updating card: " + req.params.id);
+        card.save((err) => { 
+            if(err){console.log(err);} res.send(); 
+        });
+    });
+}
+
+exports.delete_card = function(req,res){
+    card_model.findOne({"_id": req.params.id}, (err, card) =>{
+        if(card.owner != req.user.user_id){ 
+            res.send();
+            return;
+        }
+        card_model.remove({"_id": card._id}, (err) =>{
+            if(err) console.log(err);
+            res.send();
+        });
+    });
 }
 
 exports.get_decks = function(req, res, next){
@@ -125,7 +143,7 @@ exports.get_deck = function(req, res){
 
 exports.create_deck = function(req, res){
     var new_deck = new deck_model({title: req.body.title, desc: req.body.desc, 
-        imgUrl: req.body.imgUrl});
+        imgUrl: req.body.imgUrl, owner : req.user.user_id});
     new_deck.save(function(error, deck, n){
         card_model.findByIdAndUpdate(
                 req.body.cards,
@@ -139,12 +157,17 @@ exports.create_deck = function(req, res){
     });
 }
 
+
 exports.add_cards_to_deck = function(req, res){
     deck_id = req.params.deck;
     console.log("deck id:", deck_id);
     new_cards = req.body.cards;
     deck_model.findOne({'_id' : deck_id}, (err, deck, n) => {
         console.log(deck);
+        if(deck.owner!=req.user.user_id){
+            res.send();
+            return;
+        }
         if(err){
             console.log(err);
         }

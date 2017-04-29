@@ -3,7 +3,8 @@ var Schema = require('mongoose').Schema
 var deck_schema = Schema({
         title: String,
         imgUrl: String,
-        desc: String
+        desc: String,
+        owner: String
 });
 
 module.exports.schema = deck_schema;
