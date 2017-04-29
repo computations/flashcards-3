@@ -1,6 +1,7 @@
 var card_model = require('./models/modelCard');
 var media_model = require('./models/modelMedia');
 var deck_model = require('./models/modelDeck');
+var user_model = require('./models/modelUser');
 var crypto = require('crypto');
 var fs = require('fs');
 var mongoose = require('mongoose');
@@ -162,3 +163,44 @@ exports.add_cards_to_deck = function(req, res){
         }
     });
 }
+var card_include_check = function (card) {
+    var recent_date = card.correct_dates[0]
+    var backoff = new Date(recent_date);
+    backoff.setDate(newdate.getDate()+2*card.num_correct);
+    var now = new Date();
+    return backoff < now;
+};
+
+exports.get_quiz = function(req, res){
+    if(!req.user){
+        res.send();
+    }
+    else{
+        var deck_id = req.params.deck;
+        card_model.find({"decks._id": deck_id}, (err,docs) => {
+            card_ids = []
+            for(let c of docs){
+                card_ids.push(c._id);
+            }
+            var user_query = { 
+                "user_id":req.user.user_id,
+                "card_history.card": {$in : card_ids}
+            };
+            user_model.find(user_query,  (err, cards) =>{
+                var quiz_card_ids = card_ids;
+                for(let c of cards){
+                    if(!card_include_check(c)){
+                        console.log("removing card",c );
+                        var idx = quiz_card_ids.indexOf(c);
+                        quiz_card_ids.splice(idx, 1);
+                    }
+                }
+                console.log(quiz_card_ids);
+                var query = {"_id" : {$in : quiz_card_ids}};
+                card_model.find(query, (err, quiz_cards) => {
+                    res.send(quiz_cards);
+                });
+            });
+        });
+    }
+};
