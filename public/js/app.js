@@ -13,7 +13,7 @@ var Logger = (function () {
 
 //app controller is the main controller for site (routes)
 var app = angular.module('app',['ngAnimate', 'ngFileUpload', 'ngRoute', 'ngSanitize', 'ngDialog']);
-var admin = true //student vs admin view
+var admin = false //student vs admin view
 
 if (admin) {
     app.config(function($routeProvider) {
