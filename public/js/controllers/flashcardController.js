@@ -10,6 +10,7 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
     $scope.textmenu = true;
     $scope.videomenu = true;
     $scope.textfield ="";
+    $scope.dataLoaded=false;
     $scope.cards = [];
     $scope.currentCard = $scope.cards[0];
     $scope.cardCounter = 0;
@@ -337,6 +338,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         if (cardID == {} || cardID == 0 || cardID == undefined) {
             //nope, new card
            $scope.newcard = true;
+           console.log("new card");
+            $scope.currentCard = $scope.cards[0];
+            $scope.dataLoaded = true;
             return;
         }
         else {
@@ -350,10 +354,14 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
                 $scope.description = success.data.description;
                 $scope.transformServerObjToCard(success.data)
                 $scope.newcard = false;
+                $scope.currentCard = $scope.cards[0];
+                $scope.dataLoaded = true;
             }, function (error) {
                 Logger.log(error)
             });
+
         }
+
     }
 
 
@@ -363,10 +371,9 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         $scope.getCard();
 
         //Pop off first element (it was there for error loading messages 404)
-        if($scope.cards.length>0){
-            $scope.cards.pop()
-        }
-        $scope.currentCard = $scope.cards[0];
+
+
+
 
     };
 

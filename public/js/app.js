@@ -135,20 +135,24 @@ app.controller('appController', ['$scope','$http', 'Upload', function ($scope, $
     //so = if a card is clicked, show its server data, otherwise blank
 app.service("isLegitCard", function(){
     var card = {}; 
-    var deck = {}; 
+    var deck = {};
 
     return {
         getCard: function(){
-            return card; 
+            return sessionStorage.cardid;
         },
         sendCard: function(val){
-            card = val 
+            card = val;
+            sessionStorage.cardid = val;
         },
         getDeck: function(){
-            return deck; 
+            return sessionStorage.deckid;
+
         },
         sendDeck: function(val){
-            deck = val
+            console.log("called  set deck id");
+            deck = val;
+            sessionStorage.deckid = val;
         }
     }; 
 }); 
