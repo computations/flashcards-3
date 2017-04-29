@@ -171,6 +171,10 @@ var card_include_check = function (card) {
     return backoff < now;
 };
 
+exports.get_user = function(req, res){
+    res.send(req.user);
+}
+
 exports.get_quiz = function(req, res){
     if(!req.user){
         res.send();
@@ -204,3 +208,35 @@ exports.get_quiz = function(req, res){
         });
     }
 };
+
+//need to insure assumptions
+// - dates are sorted, descending
+// - num_correct is correct
+exports.update_quiz = function(req, res){
+    var user_id = req.user.id;
+    var update_card = req.body.card_id;
+    var query = {
+        "user_id": user_id,
+    };
+
+    user_model.findOneAndUpdate(query, null, {upsert:true}, (err, user)=>{
+        if(err) console.log(err);
+        else{
+            var idx = 0;
+            for(var i = 0; i < user.card_history.length; ++i){
+                if(user.card_history[i].card == update_card){
+                    idx = i;
+                    break;
+                }
+            }
+            if(req.body.correct){
+                user.card_history[idx].correct_dates.unshift(new Date());
+                user.card_history[idx].num_correct+=1;
+            }
+            else{
+                user.card_history[idx].num_correct=0;
+            }
+            user.save();
+        }
+    });
+}

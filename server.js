@@ -140,6 +140,8 @@ app.get('/quiz/:deck', routes.get_quiz);
 
 app.post('/upload', upload.single('file'), routes.upload_file);
 
+app.get('/user', routes.get_user);
+
 var private_key = fs.readFileSync('ssl/server.key', 'utf-8');
 var cert = fs.readFileSync('ssl/server.crt', 'utf-8');
 
