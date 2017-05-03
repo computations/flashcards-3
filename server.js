@@ -74,13 +74,21 @@ var jsonparser = bodyparser.json();
 /******************************************************************************
  * User auth stuff
  */
+
+app.use(require('express-session')({ 
+    secret: app_secrets.sessions_secret,
+    resave: true, 
+    saveUninitialized: true }));
+app.use(require('cookie-parser')());
+
 passport.use(new google_strat({
         clientID: app_secrets.client_id,
         clientSecret: app_secrets.client_secret,
         callbackURL: https_url+'/auth/google/callback'
     },
     (accessToken, refreshToken, profile, cb) => {
-        user_model.upsert_user(profile.id, (err, user) => {
+        console.log(profile);
+        user_model.upsert_user(profile, (err, user) => {
             if(err){console.log(err);}
             return cb(err, user);
         });
@@ -88,11 +96,14 @@ passport.use(new google_strat({
 ));
 
 passport.serializeUser((user, cb) => {
-    cb(null, user);
+    cb(null, user.user_id);
 });
 
 passport.deserializeUser((obj, cb) => {
-    cb(null, obj);
+    console.log("desereialzed user:", obj);
+    user_model.find({user_id: obj}, (err, user) =>{
+        cb(err, user);
+    });
 });
 
 app.use(passport.initialize());
@@ -107,11 +118,9 @@ app.get(
         res.redirect('/');
     }
 );
-
-app.use(require('express-session')({ 
-    secret: app_secrets.sessions_secret,
-    resave: true, 
-    saveUninitialized: true }));
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+});
 
 /******************************************************************************
  *Routing
@@ -130,7 +139,11 @@ app.get('/deck/:deck', routes.get_deck);
 app.post('/deck', jsonparser, routes.create_deck);
 app.post('/deck/:deck', jsonparser, routes.add_cards_to_deck);
 
+app.get('/quiz/:deck', routes.get_quiz);
+
 app.post('/upload', upload.single('file'), routes.upload_file);
+
+app.get('/user', routes.get_user);
 
 var private_key = fs.readFileSync('ssl/server.key', 'utf-8');
 var cert = fs.readFileSync('ssl/server.crt', 'utf-8');

@@ -95,7 +95,7 @@ app.controller('quizController', ['$scope', 'Upload', '$http','ngDialog', 'isLeg
         	//Deck exists
       		$http({
                     method: 'GET',
-                    url: 'http://localhost:3000/deck/' + deckID
+                    url: '/deck/' + deckID
                 }).then(function (success) {
                     $scope.transformServerDeckToCards(success.data)
                 }, function (error) {

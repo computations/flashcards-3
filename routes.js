@@ -1,6 +1,7 @@
 var card_model = require('./models/modelCard');
 var media_model = require('./models/modelMedia');
 var deck_model = require('./models/modelDeck');
+var user_model = require('./models/modelUser');
 var crypto = require('crypto');
 var fs = require('fs');
 var mongoose = require('mongoose');
@@ -72,7 +73,7 @@ exports.create_card = function(req, res, next){
     console.log("requested media list");
     console.log(media_list)
     var new_card = new card_model({media:media_list, title:new_title, 
-        description:new_desc});
+        description:new_desc, owner: req.user.user_id});
     new_card.save((err) =>{
         if(err){
             console.log(err);
@@ -84,23 +85,41 @@ exports.create_card = function(req, res, next){
 };
 
 exports.update_card = function(req, res, next){
-    var update_card = {}
-    if(req.body.media){
-        update_card.media = [];
-        for(var m of req.body.media){
-            update_card.media.push(new media_model(m));
+    card_model.findOne({"_id": req.params.id}, (err, card) =>{
+        if(card.owner != req.user.user_id){ 
+            res.send();
+            return;
         }
-    }
-    if(req.body.title){
-        update_card.title=req.body.title;
-    }
-    if(req.body.description){
-        update_card.description = req.body.description;
-    }
-    console.log("updating card: " + req.params.id);
-    card_model.update({'_id':req.params.id}, update_card, {}, 
-            (err, num) => { console.log( num);
-                if(err){console.log(err);} res.send(); });
+        if(req.body.media){
+            card.media = [];
+            for(var m of req.body.media){
+                card.media.push(new media_model(m));
+            }
+        }
+        if(req.body.title){
+            card.title=req.body.title;
+        }
+        if(req.body.description){
+            card.description = req.body.description;
+        }
+        console.log("updating card: " + req.params.id);
+        card.save((err) => { 
+            if(err){console.log(err);} res.send(); 
+        });
+    });
+}
+
+exports.delete_card = function(req,res){
+    card_model.findOne({"_id": req.params.id}, (err, card) =>{
+        if(card.owner != req.user.user_id){ 
+            res.send();
+            return;
+        }
+        card_model.remove({"_id": card._id}, (err) =>{
+            if(err) console.log(err);
+            res.send();
+        });
+    });
 }
 
 exports.get_decks = function(req, res, next){
@@ -124,7 +143,7 @@ exports.get_deck = function(req, res){
 
 exports.create_deck = function(req, res){
     var new_deck = new deck_model({title: req.body.title, desc: req.body.desc, 
-        imgUrl: req.body.imgUrl});
+        imgUrl: req.body.imgUrl, owner : req.user.user_id});
     new_deck.save(function(error, deck, n){
         card_model.findByIdAndUpdate(
                 req.body.cards,
@@ -138,12 +157,17 @@ exports.create_deck = function(req, res){
     });
 }
 
+
 exports.add_cards_to_deck = function(req, res){
     deck_id = req.params.deck;
     console.log("deck id:", deck_id);
     new_cards = req.body.cards;
     deck_model.findOne({'_id' : deck_id}, (err, deck, n) => {
         console.log(deck);
+        if(deck.owner!=req.user.user_id){
+            res.send();
+            return;
+        }
         if(err){
             console.log(err);
         }
@@ -159,6 +183,83 @@ exports.add_cards_to_deck = function(req, res){
                     res.send();
                 }
             );
+        }
+    });
+}
+var card_include_check = function (card) {
+    var recent_date = card.correct_dates[0]
+    var backoff = new Date(recent_date);
+    backoff.setDate(newdate.getDate()+2*card.num_correct);
+    var now = new Date();
+    return backoff < now;
+};
+
+exports.get_user = function(req, res){
+    res.send(req.user);
+}
+
+exports.get_quiz = function(req, res){
+    if(!req.user){
+        res.send();
+    }
+    else{
+        var deck_id = req.params.deck;
+        card_model.find({"decks._id": deck_id}, (err,docs) => {
+            card_ids = []
+            for(let c of docs){
+                card_ids.push(c._id);
+            }
+            var user_query = { 
+                "user_id":req.user.user_id,
+                "card_history.card": {$in : card_ids}
+            };
+            user_model.find(user_query,  (err, cards) =>{
+                var quiz_card_ids = card_ids;
+                for(let c of cards){
+                    if(!card_include_check(c)){
+                        console.log("removing card",c );
+                        var idx = quiz_card_ids.indexOf(c);
+                        quiz_card_ids.splice(idx, 1);
+                    }
+                }
+                console.log(quiz_card_ids);
+                var query = {"_id" : {$in : quiz_card_ids}};
+                card_model.find(query, (err, quiz_cards) => {
+                    res.send(quiz_cards);
+                });
+            });
+        });
+    }
+};
+
+//need to insure assumptions
+// - dates are sorted, descending
+// - num_correct is correct
+exports.update_quiz = function(req, res){
+    var user_id = req.user.id;
+    var update_card = req.body.card_id;
+    var query = {
+        "user_id": user_id,
+    };
+
+    user_model.findOneAndUpdate(query, null, {upsert:true}, (err, user)=>{
+        if(err) console.log(err);
+        else{
+            var idx = 0;
+            for(var i = 0; i < user.card_history.length; ++i){
+                if(user.card_history[i].card == update_card){
+                    idx = i;
+                    break;
+                }
+            }
+            if(req.body.correct){
+                user.card_history[idx].correct_dates.unshift(new Date());
+                user.card_history[idx].num_correct+=1;
+            }
+            else{
+                user.card_history[idx].num_correct=0;
+            }
+            user.save();
         }
     });
 }
