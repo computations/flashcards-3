@@ -338,7 +338,6 @@ app.controller('flashcardController', ['$scope', 'Upload', '$http','ngDialog', '
         if (cardID == {} || cardID == 0 || cardID == undefined) {
             //nope, new card
            $scope.newcard = true;
-           console.log("new card");
             $scope.currentCard = $scope.cards[0];
             $scope.dataLoaded = true;
             return;
