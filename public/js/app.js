@@ -206,7 +206,7 @@ app.directive('loadCards', function ($http, $compile, isLegitCard) {
 
                     //find an image side on the card to view
                     if(success.data[i].media[j].url){
-                        html += '<img src="' + success.data[i].media[j].url + '" alt="http://placehold.it/320x150">';
+                        html += '<img src="' + success.data[i].media[j].url + '" alt="https://placehold.it/320x150">';
                         imageFound = true;
                         break; //break out of for loop, only 1 image needed
                     }
@@ -214,7 +214,7 @@ app.directive('loadCards', function ($http, $compile, isLegitCard) {
 
                 if(!imageFound){
                     //replace image with default
-                    html += '<img src="http://placehold.it/320x150" alt="">';
+                    html += '<img src="https://placehold.it/320x150" alt="">';
                 }
 
 
@@ -267,7 +267,7 @@ app.directive('loadDecks', function ($http, $compile) {
                 }
                 else{
                     //replace image with default
-                    html += '<img src="http://placehold.it/320x150" alt="">';
+                    html += '<img src="https://placehold.it/320x150" alt="">';
                 }
 
                 html += '<div class="caption">';

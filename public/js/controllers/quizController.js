@@ -84,7 +84,7 @@ app.controller('quizController', ['$scope', 'Upload', '$http','ngDialog', 'isLeg
 
     $scope.getCard = function() {
         var deckID = isLegitCard.getDeck();
-        if (deckID == {}) {
+        if (deckID == {} || deckID==0) {
         	$scope.cards = {
         		type: 'text',
         		url: '',
@@ -108,6 +108,7 @@ app.controller('quizController', ['$scope', 'Upload', '$http','ngDialog', 'isLeg
     $scope.onload = function(){
         //see if it is a card that is already created
         $scope.getCard();
+
         $scope.currentCard = $scope.cards[0];
 
         //Generate first questions
