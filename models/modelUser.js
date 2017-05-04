@@ -20,7 +20,9 @@ module.exports = user
 module.exports.upsert_user = (profile, cb) => {
     console.log(profile);
     var query = {'user_id' : profile.id};
-    var update = {display_name : profile.displayName};
+    var update = {display_name : profile.displayName, 
+        $setOnInsert: {admin:false}
+    };
     user.findOneAndUpdate(query, update, {upsert: true}, (err, user) => {
         if(err){console.log(err);}
         else{cb(null, user);}
